@@ -1,2 +1,2 @@
 Built using 2023 WPILIB
-Add additonal text here
+Add additional text here
