@@ -31,8 +31,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
    * <p>
    * This can be reduced to cap the robot's maximum speed. Typically, this is useful during initial testing of the robot.
    */
-  // Prabhu - Max voltage changed from 12 to 2
-  public static final double MAX_VOLTAGE = 2;
+
+  public static final double MAX_VOLTAGE = Constants.MAX_Voltage;
   // FIXME Measure the drivetrain's maximum velocity or calculate the theoretical.
   //  The formula for calculating the theoretical maximum velocity is:
   //   <Motor free speed RPM> / 60 * <Drive reduction> * <Wheel diameter meters> * pi
@@ -213,13 +213,21 @@ public static final double MAX_VELOCITY_METERS_PER_SECOND = 4000 / 60.0 *
   
   public void drive_pid_x(double pid_output) {
         //System.out.println("getRoll()");
+        SmartDashboard.putNumber("getPitch",m_navx.getPitch() );
         SmartDashboard.putNumber("getRoll",m_navx.getRoll() );
+        SmartDashboard.putNumber("getYaw",m_navx.getYaw() );
+        
         //System.out.println( m_navx.getRoll());
         //System.out.println("pid_output");
         //System.out.println(pid_output);
         SmartDashboard.putNumber("pid_output",pid_output );
 
-        double modified_pid_output=pid_output;
+        
+      //  if((Math.abs(DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND*pid_output) < 10)) {
+                m_chassisSpeeds=new ChassisSpeeds(DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND*pid_output*-1, 0.000001,0);
+                m_chassisSpeeds=new ChassisSpeeds(DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND*pid_output*-1, -0.000001,0);
+
+        //}
         //Prabhu bring the value in 0 to 1 range
         // modified_pid_output=(Math.abs(pid_output) -180)/180;
         // modified_pid_output=modified_pid_output* pid_output/Math.abs(pid_output);
@@ -227,13 +235,14 @@ public static final double MAX_VELOCITY_METERS_PER_SECOND = 4000 / 60.0 *
         
         //m_chassisSpeeds=ChassisSpeeds.fromFieldRelativeSpeeds(DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND*modified_pid_output, 0,0,this.getGyroscopeRotation() );
         //m_chassisSpeeds=ChassisSpeeds.fromFieldRelativeSpeeds(DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND*pid_output, 0,0,new Rotation2d());
-        m_chassisSpeeds=new ChassisSpeeds(DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND*pid_output*-1, 0.000001,0);
-        m_chassisSpeeds=new ChassisSpeeds(DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND*pid_output*-1, -0.000001,0);
       }
   @Override
   public void periodic() {
     //System.out.println("In Periodic of Drive Subsystem" +m_chassisSpeeds.toString());
     SmartDashboard.putString("In Periodic of Drive Subsystem" ,m_chassisSpeeds.toString());
+    SmartDashboard.putNumber("x velocity" ,m_chassisSpeeds.vxMetersPerSecond);
+    SmartDashboard.putNumber("y Velocity" ,m_chassisSpeeds.vyMetersPerSecond);
+    SmartDashboard.putNumber("Onmega Radians per second" ,m_chassisSpeeds.omegaRadiansPerSecond);
     SmartDashboard.updateValues();
     SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
     SwerveDriveKinematics.desaturateWheelSpeeds(states, MAX_VELOCITY_METERS_PER_SECOND);

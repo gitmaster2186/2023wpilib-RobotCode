@@ -25,7 +25,7 @@ public final class Constants {
      * Should be measured from center to center.
      */
 
-    public static final double kP = 0.05;
+    public static final double kP = 0.03;
     public static final double kI = 0.0;
     public static final double kD = 0.05;
     
@@ -57,4 +57,7 @@ public final class Constants {
     public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 13; // FIXME Set back right steer encoder ID
     // public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(207.4); // FIXME Measure and set back right steer offset
     public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(205.8); // FIXME Measure and set back right steer offset
+
+      // Prabhu - Max voltage changed from 12 to 2
+    public static double MAX_Voltage=2;
 }

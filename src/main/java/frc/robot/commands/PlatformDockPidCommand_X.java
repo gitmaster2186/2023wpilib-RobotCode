@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class PlatformDockPidCommand_X extends PIDCommand {
   private final static AHRS m_navx = new AHRS(SPI.Port.kMXP, (byte) 200); // NavX connected over MXP
-
+  private static double last_roll=0.0;
   /** Creates a new PlatformDockPidCommand. */
   public PlatformDockPidCommand_X(DrivetrainSubsystem m_drivetrainSubsystem) {
     
@@ -25,7 +25,7 @@ public class PlatformDockPidCommand_X extends PIDCommand {
         // The controller that the command will use
         new PIDController(Constants.kP,Constants.kI, Constants.kD),//P,I,D
         // This should return the measurement
-        () -> m_navx.getRoll() ,
+        () -> smoothroll(m_navx.getRoll() ),
         // This should return the setpoint (can also be a constant)
         () -> 0,
         // This uses the output
@@ -54,6 +54,31 @@ public class PlatformDockPidCommand_X extends PIDCommand {
     
   }
  
+  private static double smoothroll(float roll) {
+    double calculatedroll=roll;
+    SmartDashboard.putNumber("read roll", roll);
+    if (Math.abs(roll) < 2.5)
+    {
+      calculatedroll=0.00000001;
+      last_roll=0.00000001;
+
+    }
+    else if(Math.abs(roll) < 40)
+    {
+      calculatedroll=roll;
+      last_roll=calculatedroll;
+
+    }
+    else
+    {
+      //calcuatedroll=20*roll/Math.abs(roll);
+      calculatedroll=last_roll;
+      //calculatedroll=0.001*roll/Math.abs(roll);
+    }
+    SmartDashboard.putNumber("set roll", calculatedroll);
+    return calculatedroll;
+  }
+
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
