@@ -327,7 +327,7 @@ public final class Mk3SwerveModuleHelper {
      * Creates a Mk3 swerve module that uses a Falcon 500 for driving and a NEO for steering.
      *
      * @param configuration    Module configuration parameters to use.
-     * @param gearRatio        The gearing configuration the module is in.
+     * @param                                                                                                                                                    gearRatio        The gearing configuration the module is in.
      * @param driveMotorPort   The CAN ID of the drive Falcon 500.
      * @param steerMotorPort   The CAN ID of the steer NEO.
      * @param steerEncoderPort The CAN ID of the steer CANCoder.

@@ -39,7 +39,7 @@ public class RobotContainer {
         ));
     //Prabhu initialize Gyroscope to 0 on start
     m_drivetrainSubsystem.zeroGyroscope();
-    m_drivetrainSubsystem.zeroRoll();
+    //m_drivetrainSubsystem.zeroRoll();
 
     m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(
               m_drivetrainSubsystem,
