@@ -24,9 +24,9 @@ public class SmartDashboard
 
     ShuffleboardTab driverTab = Shuffleboard.getTab("PID Control");
     
-    GenericEntry kPParam = driverTab.add("kp", kP).withWidget("Number Slider").getEntry();
-    GenericEntry kIParam = driverTab.add("kp", kI).withWidget("Number Slider").getEntry();
-    GenericEntry kDParam = driverTab.add("kp", kD).withWidget("Number Slider").getEntry();
+    GenericEntry kPParam = driverTab.add("kP", kP).withWidget("Number Slider").getEntry();
+    GenericEntry kIParam = driverTab.add("kI", kI).withWidget("Number Slider").getEntry();
+    GenericEntry kDParam = driverTab.add("kD", kD).withWidget("Number Slider").getEntry();
 
     public void readWidgetValue(String type){
         if(type == "kP"){
