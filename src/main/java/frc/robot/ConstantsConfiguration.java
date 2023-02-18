@@ -17,7 +17,6 @@ public class ConstantsConfiguration {
     public static final int FRONT_RIGHT_MODULE_DRIVE_MOTOR = Constants.FRONT_RIGHT_MODULE_DRIVE_MOTOR; 
     public static final int FRONT_RIGHT_MODULE_STEER_MOTOR = Constants.FRONT_RIGHT_MODULE_STEER_MOTOR; 
     public static final int FRONT_RIGHT_MODULE_STEER_ENCODER = Constants.FRONT_RIGHT_MODULE_STEER_ENCODER; 
-    public static final int FRONT_RIGHT_MODULE_STEER_ENCODER = Constants.FRONT_RIGHT_MODULE_STEER_ENCODER; 
     public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = Constants.FRONT_RIGHT_MODULE_STEER_OFFSET; 
 
     public static final int BACK_LEFT_MODULE_DRIVE_MOTOR = Constants.BACK_LEFT_MODULE_DRIVE_MOTOR; 
