@@ -20,6 +20,8 @@ public class RobotContainer {
   private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
 
   private final XboxController m_controller = new XboxController(0);
+  private final XboxController m_subcontroller = new XboxController(1);
+
 
   public RobotContainer() {
     // Set up the default command for the drivetrain.
