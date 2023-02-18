@@ -18,8 +18,8 @@ public class SmartDashboard
 {
     private GenericEntry entries;
 
-    private final double kP = ConstantsConfiguration.kp;
-    private final double kI = ConstantsConfiguration.kD;
+    private final double kP = ConstantsConfiguration.kP;
+    private final double kI = ConstantsConfiguration.kI;
     private final double kD = ConstantsConfiguration.kD;
 
     ShuffleboardTab driverTab = Shuffleboard.getTab("PID Control");
