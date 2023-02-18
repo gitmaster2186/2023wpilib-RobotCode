@@ -16,7 +16,8 @@ import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-public class ArmSubsystem extends SubsystemBase {
+public class ArmSubsystem extends SubsystemBase 
+{
 
       private static final int ARM_MOTOR_ID = Constants.ARM_MOTOR_ID;
       private CANSparkMax m_armMotor;
@@ -38,6 +39,9 @@ public class ArmSubsystem extends SubsystemBase {
             m_armPIDController.setIZone(kIz);
             m_armPIDController.setFF(kFF);
             m_armPIDController.setOutputRange(kMinOutput, kMaxOutput);
+            m_armPIDController.setPositionPIDWrappingMinInput(0.1);
+            m_armPIDController.setPositionPIDWrappingMaxInput(0.9);
+
 
             /*    SmartDashboard.putNumber("P Gain", kP);
             SmartDashboard.putNumber("I Gain", kI);
@@ -48,9 +52,6 @@ public class ArmSubsystem extends SubsystemBase {
             SmartDashboard.putNumber("Min Output", kMinOutput);
             SmartDashboard.putNumber("Set Rotations", 0);
             */
-            
-
-
       }
 
 
@@ -82,5 +83,10 @@ public class ArmSubsystem extends SubsystemBase {
       }
       public void setArmPosition(double rotations) {
             m_armPIDController.setReference(rotations, CANSparkMax.ControlType.kPosition);
+            if(m_armEncoder.getPosition() >= Constants.armEncoderMax)
+            {
+                  // FIXME Change this speed after testing
+                  m_armMotor.set(0.0);
+            }
       }
 }
