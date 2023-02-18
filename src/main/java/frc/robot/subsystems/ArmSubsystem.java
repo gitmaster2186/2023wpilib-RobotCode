@@ -16,57 +16,71 @@ import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-
-import static frc.robot.Constants.*;
-
 public class ArmSubsystem extends SubsystemBase {
 
-  public static final double MAX_VOLTAGE = Constants.MAX_Voltage;
-  public static final int 
+      private static final int ARM_MOTOR_ID = Constants.ARM_MOTOR_ID;
+      private CANSparkMax m_armMotor;
+      private SparkMaxPIDController m_armPIDController;
+      private RelativeEncoder m_armEncoder;
 
-  public ArmSubsystem() {
-    
-  }
+      //Values from documentation here https://github.com/REVrobotics/SPARK-MAX-Examples
+      public double kP = 0.1, kI = 1e-4, kD = 1, kIz = 0, kFF = 0, kMaxOutput = 1, kMinOutput = -1;
+
+      public ArmSubsystem() {
+            m_armMotor = new CANSparkMax(ARM_MOTOR_ID, MotorType.kBrushless);
+            m_armMotor.restoreFactoryDefaults();
+            m_armPIDController = m_armMotor.getPIDController();
+            m_armEncoder = m_armMotor.getEncoder();
+
+            m_armPIDController.setP(kP);
+            m_armPIDController.setI(kI);
+            m_armPIDController.setD(kD);
+            m_armPIDController.setIZone(kIz);
+            m_armPIDController.setFF(kFF);
+            m_armPIDController.setOutputRange(kMinOutput, kMaxOutput);
+
+            /*    SmartDashboard.putNumber("P Gain", kP);
+            SmartDashboard.putNumber("I Gain", kI);
+            SmartDashboard.putNumber("D Gain", kD);
+            SmartDashboard.putNumber("I Zone", kIz);
+            SmartDashboard.putNumber("Feed Forward", kFF);
+            SmartDashboard.putNumber("Max Output", kMaxOutput);
+            SmartDashboard.putNumber("Min Output", kMinOutput);
+            SmartDashboard.putNumber("Set Rotations", 0);
+            */
+            
 
 
-  }
-
-  public void drive(ChassisSpeeds chassisSpeeds) {
-    m_chassisSpeeds = chassisSpeeds;
-  }
-
-  
-  public void drive_pid_x(double pid_output) {
-        //System.out.println("getRoll()");
-        SmartDashboard.putNumber("getPitch",m_navx.getPitch() );
-        SmartDashboard.putNumber("getRoll",m_navx.getRoll() );
-        SmartDashboard.putNumber("getYaw",m_navx.getYaw() );
-        
-        //System.out.println( m_navx.getRoll());
-        //System.out.println("pid_output");
-        //System.out.println(pid_output);
-        SmartDashboard.putNumber("pid_output",pid_output );
-
-        
-      //  if((Math.abs(DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND*pid_output) < 10)) {
-                m_chassisSpeeds=new ChassisSpeeds(DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND*pid_output*-1, 0.000001,0);
-                m_chassisSpeeds=new ChassisSpeeds(DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND*pid_output*-1, -0.000001,0);
-
-        //}
-        //Prabhu bring the value in 0 to 1 range
-        // modified_pid_output=(Math.abs(pid_output) -180)/180;
-        // modified_pid_output=modified_pid_output* pid_output/Math.abs(pid_output);
-        // modified_pid_output=-1*modified_pid_output;
-        
-        //m_chassisSpeeds=ChassisSpeeds.fromFieldRelativeSpeeds(DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND*modified_pid_output, 0,0,this.getGyroscopeRotation() );
-        //m_chassisSpeeds=ChassisSpeeds.fromFieldRelativeSpeeds(DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND*pid_output, 0,0,new Rotation2d());
       }
-  @Override
-  public void periodic() {
-    
-  }
 
-public void zeroRoll() {
-        
-}
+
+      @Override
+      public void periodic() {
+            //uncomment this and previous block to set values with smart dashboard for testing
+
+            // double p = SmartDashboard.getNumber("P Gain", 0);
+            // double i = SmartDashboard.getNumber("I Gain", 0);
+            // double d = SmartDashboard.getNumber("D Gain", 0);
+            // double iz = SmartDashboard.getNumber("I Zone", 0);
+            // double ff = SmartDashboard.getNumber("Feed Forward", 0);
+            // double max = SmartDashboard.getNumber("Max Output", 0);
+            // double min = SmartDashboard.getNumber("Min Output", 0);
+            
+            // 
+            // double rotations = SmartDashboard.getNumber("Set Rotations", 0);
+
+            // if((p != kP)) { m_armPIDController.setP(p); kP = p; }
+            // if((i != kI)) { m_armPIDController.setI(i); kI = i; }
+            // if((d != kD)) { m_armPIDController.setD(d); kD = d; }
+            // if((iz != kIz)) { m_armPIDController.setIZone(iz); kIz = iz; }
+            // if((ff != kFF)) { m_armPIDController.setFF(ff); kFF = ff; }
+            // if((max != kMaxOutput) || (min != kMinOutput)) { 
+            //   m_armPIDController.setOutputRange(min, max); 
+            //   kMinOutput = min; kMaxOutput = max; 
+            // }
+
+      }
+      public void setArmPosition(double rotations) {
+            m_armPIDController.setReference(rotations, CANSparkMax.ControlType.kPosition);
+      }
 }
