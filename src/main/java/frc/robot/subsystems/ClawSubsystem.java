@@ -90,7 +90,7 @@ public class ClawSubsystem extends SubsystemBase
       }
       
       public enum Position{
-
+            
             //FIXME add shuffleboard control for these values
             cone(0.0),
             cube(0.0);
@@ -100,6 +100,21 @@ public class ClawSubsystem extends SubsystemBase
             Position(double position){
                   this.position = position;
             }
+            public static Position getDesiredClawPosition() {
+                  // FIXME get the selected value from the SmartDashboard combo box
+                  String selectedValue = "coneHigh";
+              
+                  // convert the selected value to an ArmPosition enum value
+                  switch (selectedValue) {
+                      case "cone":
+                          return Position.cone;
+                      case "cube":
+                          return Position.cube;
+                      default:
+                          return null; // or throw an exception if desired
+                  }
+              }
+
       }
 }
 

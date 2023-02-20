@@ -4,8 +4,17 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardComponent;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import com.google.common.collect.ImmutableMap;
 
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
@@ -19,6 +28,8 @@ public class ArmSubsystem extends SubsystemBase
       private CANSparkMax m_armMotor;
       private SparkMaxPIDController m_armPIDController;
       private RelativeEncoder m_armEncoder;
+      private NetworkTableEntry entries;
+      private ShuffleboardTab MyTab = Shuffleboard.getTab("MyTab"); 
 
       //Values from documentation here https://github.com/REVrobotics/SPARK-MAX-Examples
       public double kP = 0.1, kI = 1e-4, kD = 1, kIz = 0, kFF = 0, kMaxOutput = 1, kMinOutput = -1;
@@ -39,7 +50,7 @@ public class ArmSubsystem extends SubsystemBase
             m_armPIDController.setPositionPIDWrappingMaxInput(0.9);
 
 
-            /*    SmartDashboard.putNumber("P Gain", kP);
+            SmartDashboard.putNumber("P Gain", kP);
             SmartDashboard.putNumber("I Gain", kI);
             SmartDashboard.putNumber("D Gain", kD);
             SmartDashboard.putNumber("I Zone", kIz);
@@ -47,7 +58,8 @@ public class ArmSubsystem extends SubsystemBase
             SmartDashboard.putNumber("Max Output", kMaxOutput);
             SmartDashboard.putNumber("Min Output", kMinOutput);
             SmartDashboard.putNumber("Set Rotations", 0);
-            */
+
+            MyTab.add("Arm Position", Position.coneLow).withWidget(BuiltInWidgets.kComboBoxChooser);
       }
 
 
@@ -55,26 +67,26 @@ public class ArmSubsystem extends SubsystemBase
       public void periodic() {
             //uncomment this and previous block to set values with smart dashboard for testing
 
-            // double p = SmartDashboard.getNumber("P Gain", 0);
-            // double i = SmartDashboard.getNumber("I Gain", 0);
-            // double d = SmartDashboard.getNumber("D Gain", 0);
-            // double iz = SmartDashboard.getNumber("I Zone", 0);
-            // double ff = SmartDashboard.getNumber("Feed Forward", 0);
-            // double max = SmartDashboard.getNumber("Max Output", 0);
-            // double min = SmartDashboard.getNumber("Min Output", 0);
+             double p = SmartDashboard.getNumber("P Gain", 0);
+             double i = SmartDashboard.getNumber("I Gain", 0);
+             double d = SmartDashboard.getNumber("D Gain", 0);
+             double iz = SmartDashboard.getNumber("I Zone", 0);
+             double ff = SmartDashboard.getNumber("Feed Forward", 0);
+             double max = SmartDashboard.getNumber("Max Output", 0);
+             double min = SmartDashboard.getNumber("Min Output", 0);
             
             // 
-            // double rotations = SmartDashboard.getNumber("Set Rotations", 0);
+             double rotations = SmartDashboard.getNumber("Set Rotations", 0);
 
-            // if((p != kP)) { m_armPIDController.setP(p); kP = p; }
-            // if((i != kI)) { m_armPIDController.setI(i); kI = i; }
-            // if((d != kD)) { m_armPIDController.setD(d); kD = d; }
-            // if((iz != kIz)) { m_armPIDController.setIZone(iz); kIz = iz; }
-            // if((ff != kFF)) { m_armPIDController.setFF(ff); kFF = ff; }
-            // if((max != kMaxOutput) || (min != kMinOutput)) { 
-            //   m_armPIDController.setOutputRange(min, max); 
-            //   kMinOutput = min; kMaxOutput = max; 
-            // }
+             if((p != kP)) { m_armPIDController.setP(p); kP = p; }
+             if((i != kI)) { m_armPIDController.setI(i); kI = i; }
+             if((d != kD)) { m_armPIDController.setD(d); kD = d; }
+             if((iz != kIz)) { m_armPIDController.setIZone(iz); kIz = iz; }
+             if((ff != kFF)) { m_armPIDController.setFF(ff); kFF = ff; }
+             if((max != kMaxOutput) || (min != kMinOutput)) { 
+               m_armPIDController.setOutputRange(min, max); 
+               kMinOutput = min; kMaxOutput = max; 
+             }
 
       }
       public void setArmPosition(double rotations) {
@@ -85,6 +97,7 @@ public class ArmSubsystem extends SubsystemBase
                   m_armMotor.set(0.0);
             }
       }
+      
       public enum Position{
 
             //FIXME add shuffleboard control for these values
@@ -100,6 +113,28 @@ public class ArmSubsystem extends SubsystemBase
             Position(double position){
                   this.position = position;
             }
+            
+            public static Position getDesiredArmPosition() {
+                  // FIXME get the selected value from the SmartDashboard combo box
+                  String selectedValue = "coneHigh";              
+                  // convert the selected value to an ArmPosition enum value
+                  switch (selectedValue) {
+                      case "coneHigh":
+                          return Position.coneHigh;
+                      case "coneLow":
+                          return Position.coneLow;
+                      case "coneMid":
+                          return Position.coneMid;
+                      case "cubeLow":
+                          return Position.cubeLow;
+                      case "cubeMid":
+                          return Position.cubeMid;
+                      case "cubeHigh":
+                          return Position.cubeHigh;
+                      default:
+                          return null; // or throw an exception if desired
+                  }
+              }
       }
       
 }

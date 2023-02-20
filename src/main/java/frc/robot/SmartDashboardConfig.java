@@ -14,7 +14,7 @@ import frc.robot.ConstantsConfiguration;
 
 // Yaw, pitch, speeds
 
-public class SmartDashboard 
+public class SmartDashboardConfig 
 {
     private GenericEntry entries;
 
