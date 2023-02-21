@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.DrivetrainSubsystem;
-import frc.robot.SmartDashboardConfig;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -24,7 +23,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
-  private SmartDashboardConfig m_SmartDashboardConfig;
   public  SmartDashboard m_SmartDashboard;
   private RobotContainer m_robotContainer;
 
@@ -37,9 +35,7 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     
-    m_robotContainer = new RobotContainer();
-    m_SmartDashboardConfig = new SmartDashboardConfig();
-  
+    m_robotContainer = new RobotContainer();  
     // System.out.println("in Robo Init");
   }
 
@@ -57,12 +53,8 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
-    m_SmartDashboardConfig.readWidgetValue("kP");
-    m_SmartDashboardConfig.readWidgetValue("kI");
-    m_SmartDashboardConfig.readWidgetValue("kD");
-    // Decide where to put the next two line; either here or TeleopPeriodic
-    ArmSubsystem.Position.getDesiredArmPosition();
-    ClawSubsystem.Position.getDesiredClawPosition();
+
+
     // System.out.println("in Robo Periodic");
   }
 

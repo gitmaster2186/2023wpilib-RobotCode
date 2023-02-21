@@ -9,6 +9,7 @@ import frc.robot.Constants;
 
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -27,6 +28,7 @@ public class ClawSubsystem extends SubsystemBase
       public ClawSubsystem() {
             m_clawMotor = new CANSparkMax(CLAW_MOTOR_ID, MotorType.kBrushless);
             m_clawMotor.restoreFactoryDefaults();
+            m_clawMotor.setIdleMode(IdleMode.kBrake);
             m_clawPIDController = m_clawMotor.getPIDController();
             m_clawEncoder = m_clawMotor.getEncoder();
 
@@ -100,20 +102,6 @@ public class ClawSubsystem extends SubsystemBase
             Position(double position){
                   this.position = position;
             }
-            public static Position getDesiredClawPosition() {
-                  // FIXME get the selected value from the SmartDashboard combo box
-                  String selectedValue = "coneHigh";
-              
-                  // convert the selected value to an ArmPosition enum value
-                  switch (selectedValue) {
-                      case "cone":
-                          return Position.cone;
-                      case "cube":
-                          return Position.cube;
-                      default:
-                          return null; // or throw an exception if desired
-                  }
-              }
 
       }
 }

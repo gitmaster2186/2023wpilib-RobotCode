@@ -18,6 +18,7 @@ import com.google.common.collect.ImmutableMap;
 
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -37,6 +38,7 @@ public class ArmSubsystem extends SubsystemBase
       public ArmSubsystem() {
             m_armMotor = new CANSparkMax(ARM_MOTOR_ID, MotorType.kBrushless);
             m_armMotor.restoreFactoryDefaults();
+            m_armMotor.setIdleMode(IdleMode.kBrake);
             m_armPIDController = m_armMotor.getPIDController();
             m_armEncoder = m_armMotor.getEncoder();
 
@@ -90,12 +92,14 @@ public class ArmSubsystem extends SubsystemBase
 
       }
       public void setArmPosition(double rotations) {
-            m_armPIDController.setReference(rotations, CANSparkMax.ControlType.kPosition);
             if(m_armEncoder.getPosition() >= Constants.armEncoderMax)
             {
-                  // FIXME Change this speed after testing
                   m_armMotor.set(0.0);
+                  return;
             }
+            m_armPIDController.setReference(rotations, CANSparkMax.ControlType.kPosition);
+
+
       }
       
       public enum Position{
@@ -113,28 +117,6 @@ public class ArmSubsystem extends SubsystemBase
             Position(double position){
                   this.position = position;
             }
-            
-            public static Position getDesiredArmPosition() {
-                  // FIXME get the selected value from the SmartDashboard combo box
-                  String selectedValue = "coneHigh";              
-                  // convert the selected value to an ArmPosition enum value
-                  switch (selectedValue) {
-                      case "coneHigh":
-                          return Position.coneHigh;
-                      case "coneLow":
-                          return Position.coneLow;
-                      case "coneMid":
-                          return Position.coneMid;
-                      case "cubeLow":
-                          return Position.cubeLow;
-                      case "cubeMid":
-                          return Position.cubeMid;
-                      case "cubeHigh":
-                          return Position.cubeHigh;
-                      default:
-                          return null; // or throw an exception if desired
-                  }
-              }
       }
       
 }
