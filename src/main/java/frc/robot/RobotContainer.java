@@ -20,11 +20,11 @@ import frc.robot.subsystems.DrivetrainSubsystem;
 
 
 public class RobotContainer {
-  private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
+   final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
 
-  private final XboxController m_controller = new XboxController(0);
-  private final CommandXboxController m_subcontroller = new CommandXboxController(1);
-  private Command zeroJoystickCommand;
+   final XboxController m_controller = new XboxController(0);
+   final CommandXboxController m_subcontroller = new CommandXboxController(1);
+   Command zeroJoystickCommand;
 
 
 
@@ -70,10 +70,9 @@ public class RobotContainer {
     // Back button zeros the gyroscope
     // Put Button for PID_X
     // This Trigger runs the PID_X Commad when the y button is pressed(not held down)
-   m_subcontroller.y(null).onTrue(getAutonomousCommand());
-   zeroJoystickCommand = new RunCommand(m_drivetrainSubsystem::zeroGyroscope, m_drivetrainSubsystem);
-   zeroJoystickCommand.getInterruptionBehavior();
-   // I don't see a way to bind methods like zeroGyroscope to triggers.  
+   m_subcontroller.y().onTrue(getAutonomousCommand());
+   
+   // FIXME Check Robot.java and see if replaces below code
     new Button(m_controller::getAButton)
             // No requirements because we don't need to interrupt anything
             .whenPressed(m_drivetrainSubsystem::zeroGyroscope);

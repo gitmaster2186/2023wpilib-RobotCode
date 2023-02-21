@@ -117,6 +117,10 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
+    // Use if statement in periodic function to check if B Button is pressed; if so, zero gyroscope. Button Bindings
+    if(m_robotContainer.m_controller.getBButtonPressed() == true){
+      m_robotContainer.m_drivetrainSubsystem.zeroGyroscope();
+    }
     // System.out.println("in teleop Periodic");
   }
 
