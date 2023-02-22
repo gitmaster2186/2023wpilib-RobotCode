@@ -31,6 +31,8 @@ public class ArmSubsystem extends SubsystemBase
       private RelativeEncoder m_armEncoder;
       private NetworkTableEntry entries;
       private ShuffleboardTab MyTab = Shuffleboard.getTab("MyTab"); 
+      private int currentPosition = Position.ground;
+      private int[] rotation = new [0, 10, 20, 30, 40];
 
       //Values from documentation here https://github.com/REVrobotics/SPARK-MAX-Examples
       public double kP = 0.1, kI = 1e-4, kD = 1, kIz = 0, kFF = 0, kMaxOutput = 1, kMinOutput = -1;
@@ -91,30 +93,34 @@ public class ArmSubsystem extends SubsystemBase
              }
 
       }
-      public void setArmPosition(double rotations) {
-            if(m_armEncoder.getPosition() >= Constants.armEncoderMax)
-            {
-                  m_armMotor.set(0.0);
-                  return;
-            }
-            m_armPIDController.setReference(rotations, CANSparkMax.ControlType.kPosition);
+      public void setArmPosition(Position toSet) {
+            // if(m_armEncoder.getPosition() >= Constants.armEncoderMax)
+            // {
+            //       m_armMotor.set(0.0);
+            //       return;
+            // }
+            m_armPIDController.setReference(toSet, CANSparkMax.ControlType.kPosition);
 
 
+
+      }
+      public void setArmSpeed(double joystickInput) {
+            //FIXME add limit switches here or encoder max values
+            m_armMotor.set(joystickInput);
       }
       
       public enum Position{
 
             //FIXME add shuffleboard control for these values
-            coneLow(0),
-            coneMid(0.5),
-            coneHigh(1.0),
-            cubeLow(0),
-            cubeMid(0.5),
-            cubeHigh(1.0);
+            ground(0),
+            cubeLow(1),
+            coneLow(2),
+            cubeHigh(3),
+            coneHigh(4);
             
-            public final double position;
+            public final int position;
 
-            Position(double position){
+            Position(int position){
                   this.position = position;
             }
       }

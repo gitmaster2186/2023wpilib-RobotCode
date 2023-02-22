@@ -18,6 +18,9 @@ public class ShuffleboardConfig
 {
     private GenericEntry entries;
 
+    private final double kP = ConstantsConfiguration.kP;
+    private final double kI = ConstantsConfiguration.kI;
+    private final double kD = ConstantsConfiguration.kD;
 
     ShuffleboardTab driverTab = Shuffleboard.getTab("PID Control");
     
