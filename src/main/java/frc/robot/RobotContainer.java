@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.DefaultDriveCommand;
-import frc.robot.commands.PlatformDockPidCommand_X;
+import frc.robot.commands.PlatformDockPidCommand_Pitch;
 import frc.robot.subsystems.DrivetrainSubsystem;
 
 
@@ -73,7 +73,7 @@ public class RobotContainer {
    m_subcontroller.y().onTrue(getAutonomousCommand());
    
    // FIXME Check Robot.java and see if replaces below code
-    new Button(m_controller::getAButton)
+    new Button(m_controller::getAButtonPressed)
             // No requirements because we don't need to interrupt anything
             .whenPressed(m_drivetrainSubsystem::zeroGyroscope);
             SmartDashboard.putString("Gyro Reset","GyroReset");        
@@ -87,7 +87,7 @@ public class RobotContainer {
   public Command getAutonomousCommand( ){
     // An ExampleCommand will run in autonomous
     //return new InstantCommand();
-    return new PlatformDockPidCommand_X(m_drivetrainSubsystem);
+    return new PlatformDockPidCommand_Pitch(m_drivetrainSubsystem);
   }
 
   private static double deadband(double value, double deadband) {
