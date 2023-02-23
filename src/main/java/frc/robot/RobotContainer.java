@@ -11,14 +11,22 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Button;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.PlatformDockPidCommand_Pitch;
 import frc.robot.subsystems.DrivetrainSubsystem;
 
-public class RobotContainer {
-  private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
 
-  private final XboxController m_controller = new XboxController(0);
+public class RobotContainer {
+   final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
+
+   final XboxController m_controller = new XboxController(0);
+   final CommandXboxController m_subcontroller = new CommandXboxController(1);
+   Command zeroJoystickCommand;
+
+
 
   public RobotContainer() {
     // Set up the default command for the drivetrain.
@@ -60,6 +68,11 @@ public class RobotContainer {
   private void configureButtonBindings() {
     SmartDashboard.putString("Back button pressed","Back button pressed");
     // Back button zeros the gyroscope
+    // Put Button for PID_X
+    // This Trigger runs the PID_X Commad when the y button is pressed(not held down)
+   m_subcontroller.y().onTrue(getAutonomousCommand());
+   
+   // FIXME Check Robot.java and see if replaces below code
     new Button(m_controller::getAButtonPressed)
             // No requirements because we don't need to interrupt anything
             .whenPressed(m_drivetrainSubsystem::zeroGyroscope);

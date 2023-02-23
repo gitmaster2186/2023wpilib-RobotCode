@@ -10,7 +10,9 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.DrivetrainSubsystem;
-import frc.robot.SmartDashboard;
+import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.ClawSubsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -21,8 +23,7 @@ import frc.robot.SmartDashboard;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
-  private SmartDashboard m_SmartDashboard;
-
+  public  SmartDashboard m_SmartDashboard;
   private RobotContainer m_robotContainer;
 
   /**
@@ -34,8 +35,7 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     
-    m_robotContainer = new RobotContainer();
-    m_SmartDashboard = new SmartDashboard();
+    m_robotContainer = new RobotContainer();  
     // System.out.println("in Robo Init");
   }
 
@@ -53,9 +53,8 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
-    m_SmartDashboard.readWidgetValue("kP");
-    m_SmartDashboard.readWidgetValue("kI");
-    m_SmartDashboard.readWidgetValue("kD");
+
+
     // System.out.println("in Robo Periodic");
   }
 
@@ -104,11 +103,16 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
       // System.out.println("in teleop Init");
     }
+
   }
 
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
+    // Use if statement in periodic function to check if B Button is pressed; if so, zero gyroscope. Button Bindings
+    if(m_robotContainer.m_controller.getBButtonPressed() == true){
+      m_robotContainer.m_drivetrainSubsystem.zeroGyroscope();
+    }
     // System.out.println("in teleop Periodic");
   }
 
