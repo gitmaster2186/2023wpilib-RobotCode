@@ -10,10 +10,9 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import frc.robot.commands.DefaultDriveCommand;
-import frc.robot.commands.PlatformDockPidCommand_X;
+import frc.robot.commands.PlatformDockPidCommand_Pitch;
 import frc.robot.subsystems.DrivetrainSubsystem;
 
 public class RobotContainer {
@@ -61,7 +60,7 @@ public class RobotContainer {
   private void configureButtonBindings() {
     SmartDashboard.putString("Back button pressed","Back button pressed");
     // Back button zeros the gyroscope
-    new Button(m_controller::getAButton)
+    new Button(m_controller::getAButtonPressed)
             // No requirements because we don't need to interrupt anything
             .whenPressed(m_drivetrainSubsystem::zeroGyroscope);
             SmartDashboard.putString("Gyro Reset","GyroReset");        
@@ -75,7 +74,7 @@ public class RobotContainer {
   public Command getAutonomousCommand( ){
     // An ExampleCommand will run in autonomous
     //return new InstantCommand();
-    return new PlatformDockPidCommand_X(m_drivetrainSubsystem);
+    return new PlatformDockPidCommand_Pitch(m_drivetrainSubsystem);
   }
 
   private static double deadband(double value, double deadband) {

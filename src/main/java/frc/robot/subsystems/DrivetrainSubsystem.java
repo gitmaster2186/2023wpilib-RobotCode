@@ -8,10 +8,14 @@ import com.ctre.phoenix.sensors.PigeonIMU;
 import com.swervedrivespecialties.swervelib.Mk4iSwerveModuleHelper;
 import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
 import com.swervedrivespecialties.swervelib.SwerveModule;
+
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -20,10 +24,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
+
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
 
 import static frc.robot.Constants.*;
+
+import java.util.Arrays;
 
 public class DrivetrainSubsystem extends SubsystemBase {
   /**
@@ -87,11 +94,18 @@ public static final double MAX_VELOCITY_METERS_PER_SECOND = 4000 / 60.0 *
   private final SwerveModule m_frontRightModule;
   private final SwerveModule m_backLeftModule;
   private final SwerveModule m_backRightModule;
+  private final SwerveDriveOdometry m_odometry;
+  
+  private Pose2d m_pos;
+  public SwerveModuleState[] states ;
 
   private ChassisSpeeds m_chassisSpeeds = new ChassisSpeeds(0.0, 0.0, 0.0);
 
   public DrivetrainSubsystem() {
     ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
+    m_pos = new Pose2d();
+
+        
 
     // There are 4 methods you can call to create your swerve modules.
     // The method you use depends on what motors you are using.
@@ -163,7 +177,17 @@ public static final double MAX_VELOCITY_METERS_PER_SECOND = 4000 / 60.0 *
             BACK_RIGHT_MODULE_STEER_ENCODER,
             BACK_RIGHT_MODULE_STEER_OFFSET
     );
+    
+    
+
+    //Declare odometry object
+    m_odometry = new SwerveDriveOdometry(
+        m_kinematics, getGyroscopeRotation(),
+        getModulePositions()); 
+
   }
+
+  
 
   /**
    * Sets the gyroscope angle to zero. This can be used to set the direction the robot is currently facing to the
@@ -180,30 +204,9 @@ public static final double MAX_VELOCITY_METERS_PER_SECOND = 4000 / 60.0 *
   }
 
   public Rotation2d getGyroscopeRotation() {
-    // FIXME Remove if you are using a Pigeon
-//      return Rotation2d.fromDegrees(m_pigeon.getFusedHeading());
-
-
-    //    return new Rotation2d();
-    // FIXME Uncomment if you are using a NavX
-       // System.out.println("Magnetometer Calibrated");
-       // System.out.println(m_navx.isMagnetometerCalibrated());
-
-//Prabhu Commented this out to eliminate haphazard movement
-//   if (m_navx.isMagnetometerCalibrated()) {
-//      // We will only get valid fused headings if the magnetometer is calibrated
-//     System.out.println("Magnetometer Reading" + Rotation2d.fromDegrees(m_navx.getFusedHeading()));
-//     return Rotation2d.fromDegrees(m_navx.getFusedHeading());
-
-     
-//   }
-
-  
-
-   // We have to invert the angle of the NavX so that rotating the robot counter-clockwise makes the angle increase.
-   //System.out.println("angle of gyro" + Rotation2d.fromDegrees(360.0 - m_navx.getYaw()));
-   return Rotation2d.fromDegrees(360.0 - m_navx.getYaw());
-   // return new Rotation2d();
+   
+        return Rotation2d.fromDegrees(360.0 - m_navx.getYaw());
+   
   }
 
   public void drive(ChassisSpeeds chassisSpeeds) {
@@ -212,48 +215,86 @@ public static final double MAX_VELOCITY_METERS_PER_SECOND = 4000 / 60.0 *
 
   
   public void drive_pid_x(double pid_output) {
-        //System.out.println("getRoll()");
         SmartDashboard.putNumber("getPitch",m_navx.getPitch() );
         SmartDashboard.putNumber("getRoll",m_navx.getRoll() );
         SmartDashboard.putNumber("getYaw",m_navx.getYaw() );
         
-        //System.out.println( m_navx.getRoll());
-        //System.out.println("pid_output");
-        //System.out.println(pid_output);
         SmartDashboard.putNumber("pid_output",pid_output );
 
         
-      //  if((Math.abs(DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND*pid_output) < 10)) {
-                m_chassisSpeeds=new ChassisSpeeds(DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND*pid_output*-1, 0.000001,0);
-                m_chassisSpeeds=new ChassisSpeeds(DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND*pid_output*-1, -0.000001,0);
+        m_chassisSpeeds=new ChassisSpeeds(DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND*pid_output*-1, 0.000001,0);
+        m_chassisSpeeds=new ChassisSpeeds(DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND*pid_output*-1, -0.000001,0);
 
-        //}
-        //Prabhu bring the value in 0 to 1 range
-        // modified_pid_output=(Math.abs(pid_output) -180)/180;
-        // modified_pid_output=modified_pid_output* pid_output/Math.abs(pid_output);
-        // modified_pid_output=-1*modified_pid_output;
-        
-        //m_chassisSpeeds=ChassisSpeeds.fromFieldRelativeSpeeds(DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND*modified_pid_output, 0,0,this.getGyroscopeRotation() );
-        //m_chassisSpeeds=ChassisSpeeds.fromFieldRelativeSpeeds(DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND*pid_output, 0,0,new Rotation2d());
+      
       }
   @Override
   public void periodic() {
-    //System.out.println("In Periodic of Drive Subsystem" +m_chassisSpeeds.toString());
     SmartDashboard.putString("In Periodic of Drive Subsystem" ,m_chassisSpeeds.toString());
     SmartDashboard.putNumber("x velocity" ,m_chassisSpeeds.vxMetersPerSecond);
     SmartDashboard.putNumber("y Velocity" ,m_chassisSpeeds.vyMetersPerSecond);
     SmartDashboard.putNumber("Onmega Radians per second" ,m_chassisSpeeds.omegaRadiansPerSecond);
     SmartDashboard.updateValues();
-    SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
+    states = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
     SwerveDriveKinematics.desaturateWheelSpeeds(states, MAX_VELOCITY_METERS_PER_SECOND);
 
     m_frontLeftModule.set(states[0].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[0].angle.getRadians());
     m_frontRightModule.set(states[1].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[1].angle.getRadians());
     m_backLeftModule.set(states[2].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[2].angle.getRadians());
     m_backRightModule.set(states[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[3].angle.getRadians());
+    
+    m_pos=m_odometry.update(getGyroscopeRotation(), getModulePositions() );
+    
+  }
+
+  private SwerveModulePosition[] getModulePositions()
+  {
+        
+     SwerveModulePosition m_frontLeftModule_position=new SwerveModulePosition(m_frontLeftModule.getDriveDistance(), new Rotation2d(m_frontLeftModule.getSteerAngle()));
+     SwerveModulePosition m_frontRightModule_position=new SwerveModulePosition(m_frontRightModule.getDriveDistance(), new Rotation2d(m_frontRightModule.getSteerAngle()));
+     SwerveModulePosition m_backLeftModule_position=new SwerveModulePosition(m_backLeftModule.getDriveDistance(), new Rotation2d(m_backLeftModule.getSteerAngle()));
+     SwerveModulePosition m_backRightModule_position=new SwerveModulePosition(m_backRightModule.getDriveDistance(), new Rotation2d(m_backRightModule.getSteerAngle()));
+     SwerveModulePosition[] m_modulePositions = new SwerveModulePosition[4];
+     Arrays.fill(m_modulePositions, new SwerveModuleState());
+     m_modulePositions[0]=m_frontLeftModule_position;
+     m_modulePositions[1]=m_frontRightModule_position;
+     m_modulePositions[2]=m_backLeftModule_position;
+     m_modulePositions[3]=m_backRightModule_position;
+     return m_modulePositions;
+
+  }
+
+  public void SwerveDriveOdomertyInitialize()
+  {
+ //Creating my odometry object from the kinematics object and the initial wheel positions.
+    // Here, our starting pose is 5 meters along the long end of the field and in the
+    // center of the field along the short end, facing the opposing alliance wall.
+    SwerveModulePosition m_frontLeftModule_position=new SwerveModulePosition();
+    SwerveModulePosition m_frontRightModule_position=new SwerveModulePosition();
+    SwerveModulePosition m_backLeftModule_position=new SwerveModulePosition();
+    SwerveModulePosition m_backRightModule_position=new SwerveModulePosition();
+
+    SwerveModulePosition[] m_modulePositions = new SwerveModulePosition[4];
+
+    Arrays.fill(m_modulePositions , new SwerveModulePosition());
+    m_modulePositions[0]=m_frontLeftModule_position;
+    m_modulePositions[1]=m_frontRightModule_position;
+    m_modulePositions[2]=m_backLeftModule_position;
+    m_modulePositions[3]=m_backRightModule_position;
+    m_odometry.resetPosition( getGyroscopeRotation(),m_modulePositions, new Pose2d(new Translation2d(0,0),new Rotation2d(0))); 
+  }
+
+  
+  public Pose2d getCurrentPose()
+  {
+ 
+      return m_pos;
   }
 
 public void zeroRoll() {
         
+}
+
+public void drive_parameters(double x_speed, double y_speed, double final_angle) {
+        m_chassisSpeeds= new ChassisSpeeds(DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND*x_speed,DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND*y_speed,final_angle);
 }
 }
