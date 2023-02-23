@@ -142,7 +142,7 @@ public static final double MAX_VELOCITY_METERS_PER_SECOND = 4000 / 60.0 *
             FRONT_LEFT_MODULE_STEER_ENCODER,
             // This is how much the steer encoder is offset from true zero (In our case, zero is facing straight forward)
             FRONT_LEFT_MODULE_STEER_OFFSET
-    );
+    ); 
 
     // We will do the same for the other modules
     m_frontRightModule = Mk4iSwerveModuleHelper.createFalcon500(
