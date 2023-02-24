@@ -18,7 +18,7 @@ public class ArmSubsystem extends SubsystemBase
 {
 
       private static final int ARM_MOTOR_ID = Constants.ARM_MOTOR_ID;
-      private CANSparkMax m_armMotor;
+      public static CANSparkMax m_armMotor;
       private SparkMaxPIDController m_armPIDController;
       private RelativeEncoder m_armEncoder;
       private Position currentPosition = Position.ground;
@@ -26,13 +26,15 @@ public class ArmSubsystem extends SubsystemBase
       private double currentRotation = 0;
 
       //Values from documentation here https://github.com/REVrobotics/SPARK-MAX-Examples
-      public double kP = 0.1, kI = 1e-4, kD = 1, kIz = 0, kFF = 0, kMaxOutput = 1, kMinOutput = -1;
+      private double kP = 0.1, kI = 1e-4, kD = 1, kIz = 0, kFF = 0, kMaxOutput = 1, kMinOutput = -1;
 
       public ArmSubsystem() {
             m_armMotor = new CANSparkMax(ARM_MOTOR_ID, MotorType.kBrushless);
             m_armMotor.restoreFactoryDefaults();
             m_armMotor.setIdleMode(IdleMode.kBrake);
             m_armPIDController = m_armMotor.getPIDController();
+
+            //FIXME use rev 11-1271 bore encoder
             m_armEncoder = m_armMotor.getEncoder();
 
             m_armPIDController.setP(kP);
