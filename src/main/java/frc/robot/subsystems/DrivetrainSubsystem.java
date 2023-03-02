@@ -211,6 +211,9 @@ public static final double MAX_VELOCITY_METERS_PER_SECOND = 4000 / 60.0 *
 
   public void drive(ChassisSpeeds chassisSpeeds) {
     m_chassisSpeeds = chassisSpeeds;
+ 
+
+    
   }
 
   
@@ -243,6 +246,10 @@ public static final double MAX_VELOCITY_METERS_PER_SECOND = 4000 / 60.0 *
     m_backRightModule.set(states[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[3].angle.getRadians());
     
     m_pos=m_odometry.update(getGyroscopeRotation(), getModulePositions() );
+    SmartDashboard.putString("Current Pose at Drive Train" ,m_pos.toString());
+
+    SmartDashboard.putNumber("Current Pose X at Drive Train" ,m_pos.getX());
+    SmartDashboard.putNumber("Current Pose Y at Drive Train" ,m_pos.getY());
     
   }
 
@@ -259,6 +266,8 @@ public static final double MAX_VELOCITY_METERS_PER_SECOND = 4000 / 60.0 *
      m_modulePositions[1]=m_frontRightModule_position;
      m_modulePositions[2]=m_backLeftModule_position;
      m_modulePositions[3]=m_backRightModule_position;
+
+     SmartDashboard.updateValues();
      return m_modulePositions;
 
   }
