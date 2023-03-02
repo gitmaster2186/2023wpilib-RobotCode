@@ -16,12 +16,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class PlatformDockPidCommand_X extends PIDCommand {
-  private final static AHRS m_navx = new AHRS(SPI.Port.kMXP, (byte) 200); // NavX connected over MXP
-  private static double last_roll=0.0;
-  /** Creates a new PlatformDockPidCommand. */
-  public PlatformDockPidCommand_X(DrivetrainSubsystem m_drivetrainSubsystem) {
-    
-    super(
+    private final static AHRS m_navx = new AHRS(SPI.Port.kMXP, (byte) 200); // NavX connected over MXP
+    private static double last_roll=0.0;
+    /** Creates a new PlatformDockPidCommand. */
+    public PlatformDockPidCommand_X(DrivetrainSubsystem m_drivetrainSubsystem) {
+        
+        super(
         // The controller that the command will use
         new PIDController(Constants.kP,Constants.kI, Constants.kD),//P,I,D
         // This should return the measurement
@@ -30,7 +30,7 @@ public class PlatformDockPidCommand_X extends PIDCommand {
         () -> 0,
         // This uses the output
         output -> {
-          // this is input to Plant - aka Drive Sub System
+            // this is input to Plant - aka Drive Sub System
             
             // m_drivetrainSubsystem.drive_pid(
             //   ChassisSpeeds.fromFieldRelativeSpeeds(
@@ -38,50 +38,50 @@ public class PlatformDockPidCommand_X extends PIDCommand {
             //     0,
             //           0,//DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND * constant if needed
             //           m_drivetrainSubsystem.getGyroscopeRotation()));
-
+            
             m_drivetrainSubsystem.drive_pid_x(output);
             //System.out.println("getRoll()");
-        // SmartDashboard.putNumber("getRoll",m_navx.getRoll() );
-        // //System.out.println( m_navx.getRoll());
-        // //System.out.println("pid_output");
-        // //System.out.println(pid_output);
-        // SmartDashboard.putNumber("pid_output",output);
-        // SmartDashboard.updateValues();    
+            // SmartDashboard.putNumber("getRoll",m_navx.getRoll() );
+            // //System.out.println( m_navx.getRoll());
+            // //System.out.println("pid_output");
+            // //System.out.println(pid_output);
+            // SmartDashboard.putNumber("pid_output",output);
+            // SmartDashboard.updateValues();    
         });
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(m_drivetrainSubsystem);
-    // Configure additional PID options by calling `getController` here.
+        // Use addRequirements() here to declare subsystem dependencies.
+        addRequirements(m_drivetrainSubsystem);
+        // Configure additional PID options by calling `getController` here.
+        
+    }
     
-  }
- 
-  private static double smoothroll(float roll) {
-    double calculatedroll=roll;
-    SmartDashboard.putNumber("read roll", roll);
-    if (Math.abs(roll) < 2.5)
-    {
-      calculatedroll=0.00000001;
-      last_roll=0.00000001;
-
+    private static double smoothroll(float roll) {
+        double calculatedroll=roll;
+        SmartDashboard.putNumber("read roll", roll);
+        if (Math.abs(roll) < 2.5)
+        {
+            calculatedroll=0.00000001;
+            last_roll=0.00000001;
+            
+        }
+        else if(Math.abs(roll) < 40)
+        {
+            calculatedroll=roll;
+            last_roll=calculatedroll;
+            
+        }
+        else
+        {
+            //calcuatedroll=20*roll/Math.abs(roll);
+            calculatedroll=last_roll;
+            //calculatedroll=0.001*roll/Math.abs(roll);
+        }
+        SmartDashboard.putNumber("set roll", calculatedroll);
+        return calculatedroll;
     }
-    else if(Math.abs(roll) < 40)
-    {
-      calculatedroll=roll;
-      last_roll=calculatedroll;
-
+    
+    // Returns true when the command should end.
+    @Override
+    public boolean isFinished() {
+        return false;
     }
-    else
-    {
-      //calcuatedroll=20*roll/Math.abs(roll);
-      calculatedroll=last_roll;
-      //calculatedroll=0.001*roll/Math.abs(roll);
-    }
-    SmartDashboard.putNumber("set roll", calculatedroll);
-    return calculatedroll;
-  }
-
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return false;
-  }
 }
