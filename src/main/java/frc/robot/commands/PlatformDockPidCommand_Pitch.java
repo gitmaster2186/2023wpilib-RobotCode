@@ -16,12 +16,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class PlatformDockPidCommand_Pitch extends PIDCommand {
-  private final static AHRS m_navx = new AHRS(SPI.Port.kMXP, (byte) 200); // NavX connected over MXP
-  private static double last_pitch=0.0;
-  /** Creates a new PlatformDockPidCommand. */
-  public PlatformDockPidCommand_Pitch(DrivetrainSubsystem m_drivetrainSubsystem) {
-    
-    super(
+    private final static AHRS m_navx = new AHRS(SPI.Port.kMXP, (byte) 200); // NavX connected over MXP
+    private static double last_pitch=0.0;
+    /** Creates a new PlatformDockPidCommand. */
+    public PlatformDockPidCommand_Pitch(DrivetrainSubsystem m_drivetrainSubsystem) {
+        
+        super(
         // The contpitcher that the command will use
         new PIDController(Constants.kP,Constants.kI, Constants.kD),//P,I,D
         // This should return the measurement
@@ -30,45 +30,45 @@ public class PlatformDockPidCommand_Pitch extends PIDCommand {
         () -> 0,
         // This uses the output
         output -> {
-          // this is input to Plant - aka Drive Sub System
+            // this is input to Plant - aka Drive Sub System
             
-
+            
             m_drivetrainSubsystem.drive_pid_x(output);
         });
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(m_drivetrainSubsystem);
-    // Configure additional PID options by calling `getContpitcher` here.
+        // Use addRequirements() here to declare subsystem dependencies.
+        addRequirements(m_drivetrainSubsystem);
+        // Configure additional PID options by calling `getContpitcher` here.
+        
+    }
     
-  }
- 
-  private static double smoothpitch(float pitch) {
-    double calculatedpitch=pitch;
-    SmartDashboard.putNumber("read pitch", pitch);
-    if (Math.abs(pitch) < 2.5)
-    {
-      calculatedpitch=0.00000001;
-      last_pitch=0.00000001;
-
+    private static double smoothpitch(float pitch) {
+        double calculatedpitch=pitch;
+        SmartDashboard.putNumber("read pitch", pitch);
+        if (Math.abs(pitch) < 2.5)
+        {
+            calculatedpitch=0.00000001;
+            last_pitch=0.00000001;
+            
+        }
+        else if(Math.abs(pitch) < 40)
+        {
+            calculatedpitch=pitch;
+            last_pitch=calculatedpitch;
+            
+        }
+        else
+        {
+            //calcuatedpitch=20*pitch/Math.abs(pitch);
+            calculatedpitch=last_pitch;
+            //calculatedpitch=0.001*pitch/Math.abs(pitch);
+        }
+        SmartDashboard.putNumber("set pitch", calculatedpitch);
+        return calculatedpitch;
     }
-    else if(Math.abs(pitch) < 40)
-    {
-      calculatedpitch=pitch;
-      last_pitch=calculatedpitch;
-
+    
+    // Returns true when the command should end.
+    @Override
+    public boolean isFinished() {
+        return false;
     }
-    else
-    {
-      //calcuatedpitch=20*pitch/Math.abs(pitch);
-      calculatedpitch=last_pitch;
-      //calculatedpitch=0.001*pitch/Math.abs(pitch);
-    }
-    SmartDashboard.putNumber("set pitch", calculatedpitch);
-    return calculatedpitch;
-  }
-
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return false;
-  }
 }

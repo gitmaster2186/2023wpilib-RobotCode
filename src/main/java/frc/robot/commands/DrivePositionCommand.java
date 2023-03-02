@@ -62,5 +62,11 @@ public class DrivePositionCommand extends CommandBase {
     //check Pose2d vs what we want
     return (this_DrivetrainSubsystem.getCurrentPose().getX()-this_desired_pose.getX()< 0.1) &&  (this_DrivetrainSubsystem.getCurrentPose().getY()-this_desired_pose.getY()< 0.1) ;
     
-  }
+    // Returns true when the command should end.
+    @Override
+    public boolean isFinished() {
+        //check Pose2d vs what we want
+        return (this_DrivetrainSubsystem.getCurrentPose().getX()-  this_desired_pose.getX()< 0.01) &&  (this_DrivetrainSubsystem.getCurrentPose().getY()-  this_desired_pose.getY()< 0.01) ;
+        
+    }
 }
