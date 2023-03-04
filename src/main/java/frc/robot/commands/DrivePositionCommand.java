@@ -10,6 +10,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.DrivetrainSubsystem;
 
 
@@ -49,7 +50,7 @@ public class DrivePositionCommand extends CommandBase {
     SmartDashboard.putNumber("Desired Pose X" ,this_desired_pose.getX());
     SmartDashboard.putNumber("Desired Pose Y" ,this_desired_pose.getY());
     //this_DrivetrainSubsystem.drive_parameters((this_desired_pose.getX()-m_currentPose.getX())/100,(this_desired_pose.getY()-m_currentPose.getY())/100,this_desired_pose.getRotation().getRadians()-m_currentPose.getRotation().getRadians());
-    this_DrivetrainSubsystem.drive_parameters((this_desired_pose.getX()-m_currentPose.getX())/100.0,(this_desired_pose.getY()-m_currentPose.getY())/100.0,this_desired_pose.getRotation().getRadians());
+    this_DrivetrainSubsystem.drive_parameters((this_desired_pose.getX()-m_currentPose.getX()) * Constants.MINIMUM_DISPLACEMENT,(this_desired_pose.getY()-m_currentPose.getY())*Constants.SPEED_SCALE_FACTOR,this_desired_pose.getRotation().getRadians());
   }
 
   // Called once the command ends or is interrupted.
