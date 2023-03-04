@@ -11,19 +11,19 @@ import edu.wpi.first.wpilibj2.command.TrapezoidProfileCommand;
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class DriverTrainTrapezoidMotion extends TrapezoidProfileCommand {
-  /** Creates a new DriverTrainTrapezoidMotion. */
-  public DriverTrainTrapezoidMotion() {
-    super(
+    /** Creates a new DriverTrainTrapezoidMotion. */
+    public DriverTrainTrapezoidMotion() {
+        super(
         // The motion profile to be executed
         new TrapezoidProfile(
-            // The motion profile constraints
-            new TrapezoidProfile.Constraints(0, 0),
-            // Goal state
-            new TrapezoidProfile.State(),
-            // Initial state
-            new TrapezoidProfile.State()),
+        // The motion profile constraints
+        new TrapezoidProfile.Constraints(0, 0),
+        // Goal state
+        new TrapezoidProfile.State(),
+        // Initial state
+        new TrapezoidProfile.State()),
         state -> {
-          // Use current trajectory state here
+            // Use current trajectory state here
         });
-  }
+    }
 }
