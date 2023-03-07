@@ -150,7 +150,7 @@ public class ArmSubsystem extends SubsystemBase
     
     public void setArmSpeed(double joystickInput) {
         //FIXME add limit switches here or encoder max values
-        m_armPIDController.setReference(-joystickInput * Constants.MAX_Voltage, CANSparkMax.ControlType.kVoltage);
+        m_armPIDController.setReference(-joystickInput * Constants.MAX_Voltage * (0.001), CANSparkMax.ControlType.kVoltage);
     }
     
     public enum Position{

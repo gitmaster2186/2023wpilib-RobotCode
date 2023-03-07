@@ -62,6 +62,8 @@ public final class Constants {
     public static final int CLAW_MOTOR_ID = 14; //sahil- random unused value, maybe should be different?
     public static final double armEncoderMax = 0;
     
+
+    // This is the value with which we stop moving
     public static final double MINIMUM_DISPLACEMENT = 0.01;
     public static final double SPEED_SCALE_FACTOR = 0.01;
     public static final double minYSpeed = 0.000001;
