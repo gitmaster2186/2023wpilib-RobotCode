@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxLimitSwitch;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax;
@@ -23,9 +24,14 @@ public class ArmSubsystem extends SubsystemBase
     private SparkMaxPIDController m_armPIDController;
     private RelativeEncoder m_armEncoder;
     private Position currentPosition = Position.ground;
-    private double[] rotationMap = {0, 10, 20, 30, 40}; //move to constants eventually
+    private double[] rotationMap = {0, 5, 10, 15, 20}; //move to constants eventually
     private double currentRotation = 0;
-    
+    private boolean enableLimitSwitch = false;
+
+    public final double DEADBAND = 0.12;
+    private SparkMaxLimitSwitch m_forwardLimit;
+    private SparkMaxLimitSwitch m_reverseLimit;
+        
     //Values from documentation here https://github.com/REVrobotics/SPARK-MAX-Examples
     private double kP = 0.1, kI = 1e-4, kD = 1, kIz = 0, kFF = 0, kMaxOutput = 1, kMinOutput = -1;
     
@@ -37,6 +43,11 @@ public class ArmSubsystem extends SubsystemBase
         
         //FIXME use rev 11-1271 bore encoder
         m_armEncoder = m_armMotor.getEncoder();
+        m_forwardLimit = m_armMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
+        m_reverseLimit = m_armMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
+        m_forwardLimit.enableLimitSwitch(enableLimitSwitch);
+        m_reverseLimit.enableLimitSwitch(enableLimitSwitch);
+        
         
         m_armPIDController.setP(kP);
         m_armPIDController.setI(kI);
@@ -46,6 +57,8 @@ public class ArmSubsystem extends SubsystemBase
         m_armPIDController.setOutputRange(kMinOutput, kMaxOutput);
         m_armPIDController.setPositionPIDWrappingMinInput(0.1);
         m_armPIDController.setPositionPIDWrappingMaxInput(0.9);
+
+
         
         SmartDashboard.putNumber("P Gain", kP);
         SmartDashboard.putNumber("I Gain", kI);
@@ -58,6 +71,9 @@ public class ArmSubsystem extends SubsystemBase
         SmartDashboard.putNumberArray("Rotation Map", rotationMap);
         SmartDashboard.putNumber("current Rotation", currentRotation);
         SmartDashboard.putString("current Position", currentPosition.name());
+
+        SmartDashboard.putBoolean("Forward Limit Enabled", m_forwardLimit.isLimitSwitchEnabled());
+        SmartDashboard.putBoolean("Reverse Limit Enabled", m_reverseLimit.isLimitSwitchEnabled());
         /* 
         use SmartDashboard tabs
         m_tab.add("P Gain", kP).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1));
@@ -93,6 +109,8 @@ public class ArmSubsystem extends SubsystemBase
         
         SmartDashboard.putNumber("current Rotation", m_armEncoder.getPosition());
         SmartDashboard.putString("current Position", currentPosition.name());
+        SmartDashboard.putBoolean("Forward Limit Switch", m_forwardLimit.isPressed());
+        SmartDashboard.putBoolean("Reverse Limit Switch", m_reverseLimit.isPressed());
         
         if((p != kP)) { m_armPIDController.setP(p); kP = p; }
         if((i != kI)) { m_armPIDController.setI(i); kI = i; }
