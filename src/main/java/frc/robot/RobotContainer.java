@@ -8,6 +8,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 
@@ -15,6 +16,7 @@ import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
 
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.commands.ArmSpeedCommand;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.PlatformDockPidCommand_Pitch;
 
@@ -71,9 +73,11 @@ public class RobotContainer {
                 m_subcontroller.y().onTrue(getAutonomousCommand());
                 m_subcontroller.povDown().onTrue(Commands.runOnce(() -> m_drivetrainSubsystem.zeroGyroscope(), m_drivetrainSubsystem));
 
-                m_subcontroller.leftBumper().onTrue(Commands.runOnce(() -> m_armSubsystem.lowerArmPosition(), m_armSubsystem));
-                m_subcontroller.rightBumper().onTrue(Commands.runOnce(() -> m_armSubsystem.raiseArmPosition(), m_armSubsystem));
-      
+                //m_subcontroller.leftBumper().onTrue(Commands.runOnce(() -> m_armSubsystem.lowerArmPosition(), m_armSubsystem));
+                //m_subcontroller.rightBumper().onTrue(Commands.runOnce(() -> m_armSubsystem.raiseArmPosition(), m_armSubsystem));
+                m_subcontroller.axisGreaterThan(XboxController.Axis.kLeftY.value, m_armSubsystem.DEADBAND).onTrue(new ArmSpeedCommand(() -> m_subcontroller.getLeftY(), m_armSubsystem));
+                m_subcontroller.axisLessThan(XboxController.Axis.kLeftY.value, m_armSubsystem.DEADBAND).onTrue(new ArmSpeedCommand(() -> m_subcontroller.getLeftY(), m_armSubsystem));
+                
             }
             
             /**
