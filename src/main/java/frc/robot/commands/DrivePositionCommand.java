@@ -15,44 +15,45 @@ import frc.robot.subsystems.DrivetrainSubsystem;
 
 
 public class DrivePositionCommand extends CommandBase {
-    SwerveDriveOdometry m_subsystemOdometry;
-    DrivetrainSubsystem this_DrivetrainSubsystem;
-    Pose2d this_desired_pose;
-    
-    
-    /** Creates a new AutonomousDriveDistance. */
-    public DrivePositionCommand(DrivetrainSubsystem m_DrivetrainSubsystem, Pose2d desired_pose ) {
-        // Use addRequirements() here to declare subsystem dependencies.
-        this_DrivetrainSubsystem=m_DrivetrainSubsystem;
-        this_desired_pose=desired_pose;
-        addRequirements(m_DrivetrainSubsystem);
-    }
-    
-    // Called when the command is initially scheduled.
-    @Override
-    public void initialize() {
-        this_DrivetrainSubsystem.SwerveDriveOdomertyInitialize();
-    }
-    
-    // Called every time the scheduler runs while the command is scheduled.
-    // Prabhu - Can use a pid here for each axis-maybe overkill
-    @Override
-    public void execute() {
-        //Drive robot
-        Pose2d m_currentPose= this_DrivetrainSubsystem.getCurrentPose();
-        // SmartDashboard.putString("Current Pose" ,m_currentPose.toString());
-        
-        // SmartDashboard.putNumber("Current Pose X" ,m_currentPose.getX());
-        // SmartDashboard.putNumber("Current Pose Y" ,m_currentPose.getY());
-        
-        SmartDashboard.putString("Desired Pose" ,this_desired_pose.toString());
-        
-        SmartDashboard.putNumber("Desired Pose X" ,this_desired_pose.getX());
-        SmartDashboard.putNumber("Desired Pose Y" ,this_desired_pose.getY());
-        //this_DrivetrainSubsystem.drive_parameters((this_desired_pose.getX()-m_currentPose.getX())/100,(this_desired_pose.getY()-m_currentPose.getY())/100,this_desired_pose.getRotation().getRadians()-m_currentPose.getRotation().getRadians());
-        this_DrivetrainSubsystem.drive_parameters((this_desired_pose.getX()-m_currentPose.getX()) * Constants.SPEED_SCALE_FACTOR,
-        (this_desired_pose.getY()-m_currentPose.getY()) * Constants.SPEED_SCALE_FACTOR,this_desired_pose.getRotation().getRadians());
-    }
+
+  SwerveDriveOdometry m_subsystemOdometry;
+  DrivetrainSubsystem this_DrivetrainSubsystem;
+  Pose2d this_desired_pose;
+
+
+  /** Creates a new AutonomousDriveDistance. */
+  public DrivePositionCommand(DrivetrainSubsystem m_DrivetrainSubsystem, Pose2d desired_pose ) {
+    // Use addRequirements() here to declare subsystem dependencies.
+    this_DrivetrainSubsystem=m_DrivetrainSubsystem;
+    this_desired_pose=desired_pose;
+    addRequirements(m_DrivetrainSubsystem);
+  }
+ 
+  // Called when the command is initially scheduled.
+  @Override
+  public void initialize() {
+   this_DrivetrainSubsystem.SwerveDriveOdomertyInitialize();
+  }
+
+  // Called every time the scheduler runs while the command is scheduled.
+  // Prabhu - Can use a pid here for each axis-maybe overkill
+  @Override
+  public void execute() {
+    //Drive robot
+    Pose2d m_currentPose= this_DrivetrainSubsystem.getCurrentPose();
+    // SmartDashboard.putString("Current Pose" ,m_currentPose.toString());
+
+    // SmartDashboard.putNumber("Current Pose X" ,m_currentPose.getX());
+    // SmartDashboard.putNumber("Current Pose Y" ,m_currentPose.getY());
+
+    SmartDashboard.putString("Desired Pose" ,this_desired_pose.toString());
+
+    SmartDashboard.putNumber("Desired Pose X" ,this_desired_pose.getX());
+    SmartDashboard.putNumber("Desired Pose Y" ,this_desired_pose.getY());
+    //this_DrivetrainSubsystem.drive_parameters((this_desired_pose.getX()-m_currentPose.getX())/100,(this_desired_pose.getY()-m_currentPose.getY())/100,this_desired_pose.getRotation().getRadians()-m_currentPose.getRotation().getRadians());
+    this_DrivetrainSubsystem.drive_parameters((this_desired_pose.getX()-m_currentPose.getX()) * Constants.MINIMUM_DISPLACEMENT,(this_desired_pose.getY()-m_currentPose.getY())*Constants.SPEED_SCALE_FACTOR,this_desired_pose.getRotation().getRadians());
+  }
+
     
     // Called once the command ends or is interrupted.
     @Override
