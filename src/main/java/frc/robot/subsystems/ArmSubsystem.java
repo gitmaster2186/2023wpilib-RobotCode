@@ -26,7 +26,7 @@ public class ArmSubsystem extends SubsystemBase
     private Position currentPosition = Position.ground;
     private double[] rotationMap = {-10, -30, -50, -70, -80}; //move to constants eventually
     private double currentRotation = 0;
-    private boolean enableLimitSwitch = false;
+    private boolean enableLimitSwitch = true;
 
     public final double DEADBAND = 0.12;
     private SparkMaxLimitSwitch m_forwardLimit;
