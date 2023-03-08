@@ -260,7 +260,7 @@ public static final double MAX_VELOCITY_METERS_PER_SECOND = 4000 / 60.0 *
      SwerveModulePosition m_frontRightModule_position=new SwerveModulePosition(m_frontRightModule.getDriveDistance(), new Rotation2d(m_frontRightModule.getSteerAngle()));
      SwerveModulePosition m_backLeftModule_position=new SwerveModulePosition(m_backLeftModule.getDriveDistance(), new Rotation2d(m_backLeftModule.getSteerAngle()));
      SwerveModulePosition m_backRightModule_position=new SwerveModulePosition(m_backRightModule.getDriveDistance(), new Rotation2d(m_backRightModule.getSteerAngle()));
-     SwerveModulePosition[] m_modulePositions = new SwerveModulePosition[4];
+     SwerveModulePosition[] m_modulePositions = new SwerveModulePosition[3];
      Arrays.fill(m_modulePositions, new SwerveModuleState());
      m_modulePositions[0]=m_frontLeftModule_position;
      m_modulePositions[1]=m_frontRightModule_position;

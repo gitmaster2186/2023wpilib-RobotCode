@@ -24,13 +24,15 @@ public class ArmSubsystem extends SubsystemBase
     private SparkMaxPIDController m_armPIDController;
     private RelativeEncoder m_armEncoder;
     private Position currentPosition = Position.ground;
-    private double[] rotationMap = {0, 5, 10, 15, 20}; //move to constants eventually
+    private double[] rotationMap = {-10, -30, -50, -70, -80}; //move to constants eventually
     private double currentRotation = 0;
     private boolean enableLimitSwitch = false;
 
     public final double DEADBAND = 0.12;
     private SparkMaxLimitSwitch m_forwardLimit;
     private SparkMaxLimitSwitch m_reverseLimit;
+    //limit switch MAX (highest position): -89.2
+    //limit switch MIN (lowest position): 1.8
         
     //Values from documentation here https://github.com/REVrobotics/SPARK-MAX-Examples
     private double kP = 0.1, kI = 1e-4, kD = 1, kIz = 0, kFF = 0, kMaxOutput = 1, kMinOutput = -1;
@@ -43,8 +45,8 @@ public class ArmSubsystem extends SubsystemBase
         
         //FIXME use rev 11-1271 bore encoder
         m_armEncoder = m_armMotor.getEncoder();
-        m_forwardLimit = m_armMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
-        m_reverseLimit = m_armMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
+        m_forwardLimit = m_armMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
+        m_reverseLimit = m_armMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
         m_forwardLimit.enableLimitSwitch(enableLimitSwitch);
         m_reverseLimit.enableLimitSwitch(enableLimitSwitch);
         
@@ -150,7 +152,7 @@ public class ArmSubsystem extends SubsystemBase
     
     public void setArmSpeed(double joystickInput) {
         //FIXME add limit switches here or encoder max values
-        m_armPIDController.setReference(-joystickInput * Constants.MAX_Voltage * (0.001), CANSparkMax.ControlType.kVoltage);
+        m_armPIDController.setReference(joystickInput * Constants.MAX_Voltage * (0.001), CANSparkMax.ControlType.kVoltage);
     }
     
     public enum Position{
