@@ -30,8 +30,7 @@ public class ArmSpeedCommand extends CommandBase {
     @Override
     public void execute() {
         double axisValue = ySupplier.getAsDouble();
-        m_ArmSubsystem.setArmSpeed(axisValue);
-
+        m_ArmSubsystem.setArmSpeed(m_ArmSubsystem.joystickLimiter.calculate(axisValue));
     }
     
     @Override

@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -27,6 +28,9 @@ public class ArmSubsystem extends SubsystemBase
     private double[] rotationMap = {-10, -30, -50, -70, -80}; //move to constants eventually
     private double currentRotation = 0;
     private boolean enableLimitSwitch = true;
+    //FIXME Change these values when needed
+    // 0.3 is the max speed that it can accelerate at any given moment. 
+    public SlewRateLimiter joystickLimiter = new SlewRateLimiter(0.3);
 
     public final double DEADBAND = 0.12;
     private SparkMaxLimitSwitch m_forwardLimit;
