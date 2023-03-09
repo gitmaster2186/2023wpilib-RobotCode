@@ -12,27 +12,38 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxLimitSwitch;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 
 public class ArmSubsystem extends SubsystemBase 
 {
-    
+    //declare subsystem variables
     private static final int ARM_MOTOR_ID = Constants.ARM_MOTOR_ID;
     public static CANSparkMax m_armMotor;
     private SparkMaxPIDController m_armPIDController;
     private RelativeEncoder m_armEncoder;
+    private double currentRotation;
     private Position currentPosition = Position.ground;
-    private double[] rotationMap = {0, 5, 10, 15, 20}; //move to constants eventually
-    private double currentRotation = 0;
-    private boolean enableLimitSwitch = false;
 
+    //create the roation map
+    private double[] rotationMap = {-10, -20, -50, -60, -70}; //move to constants eventually
+
+    //create limit configuration variables
     public final double DEADBAND = 0.12;
+    private boolean isLimitSwitchEnabled = true;
+    private boolean isSoftLimitEnabled = true;
+    private float FORWARD_SOFT_LIMIT = 1;
+    private float REVERSE_SOFT_LIMIT = -89;
     private SparkMaxLimitSwitch m_forwardLimit;
     private SparkMaxLimitSwitch m_reverseLimit;
+    private final int PID_SLOT_ID = 0;
+    private double maxAccel = 1000; //in RPM/s
+    private double maxVelocity = 2000; //in RPM
+
         
-    //Values from documentation here https://github.com/REVrobotics/SPARK-MAX-Examples
+    //PID values from documentation here https://github.com/REVrobotics/SPARK-MAX-Examples
     private double kP = 0.1, kI = 1e-4, kD = 1, kIz = 0, kFF = 0, kMaxOutput = 1, kMinOutput = -1;
     
     public ArmSubsystem() {
@@ -40,13 +51,38 @@ public class ArmSubsystem extends SubsystemBase
         m_armMotor.restoreFactoryDefaults();
         m_armMotor.setIdleMode(IdleMode.kBrake);
         m_armPIDController = m_armMotor.getPIDController();
-        
-        //FIXME use rev 11-1271 bore encoder
         m_armEncoder = m_armMotor.getEncoder();
+        //m_armMotor.setSmartCurrentLimit(int StallLimit, int FreeLimit); //already enabled by deaflt to 80A and 20A respectively. Test other new code before enabling this. 
+
+        currentRotation = m_armEncoder.getPosition();
+        m_armPIDController.setSmartMotionMaxAccel(maxAccel, PID_SLOT_ID);
+        m_armPIDController.setSmartMotionMaxVelocity(maxVelocity, PID_SLOT_ID);
+
+        SmartDashboard.putNumber("current Rotation", currentRotation);
+        SmartDashboard.putNumber("Max Acceleration", maxAccel);
+        SmartDashboard.putNumber("Max Velocity", maxVelocity);
+
+
+
+
         m_forwardLimit = m_armMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
         m_reverseLimit = m_armMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
-        m_forwardLimit.enableLimitSwitch(enableLimitSwitch);
-        m_reverseLimit.enableLimitSwitch(enableLimitSwitch);
+        m_forwardLimit.enableLimitSwitch(isLimitSwitchEnabled);
+        m_reverseLimit.enableLimitSwitch(isLimitSwitchEnabled);
+
+        SmartDashboard.putBoolean("Limit Switch Enabled", isLimitSwitchEnabled);
+
+
+
+        m_armMotor.enableSoftLimit(SoftLimitDirection.kForward, isSoftLimitEnabled);
+        m_armMotor.enableSoftLimit(SoftLimitDirection.kReverse, isSoftLimitEnabled);
+        m_armMotor.setSoftLimit(CANSparkMax.SoftLimitDirection.kForward, FORWARD_SOFT_LIMIT);
+        m_armMotor.setSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, REVERSE_SOFT_LIMIT);
+
+        SmartDashboard.putBoolean("Soft Limit Enabled", isSoftLimitEnabled);
+        SmartDashboard.putNumber("Forward Soft Limit", m_armMotor.getSoftLimit(CANSparkMax.SoftLimitDirection.kForward));
+        SmartDashboard.putNumber("Reverse Soft Limit", m_armMotor.getSoftLimit(CANSparkMax.SoftLimitDirection.kReverse));
+
         
         
         m_armPIDController.setP(kP);
@@ -58,8 +94,6 @@ public class ArmSubsystem extends SubsystemBase
         m_armPIDController.setPositionPIDWrappingMinInput(0.1);
         m_armPIDController.setPositionPIDWrappingMaxInput(0.9);
 
-
-        
         SmartDashboard.putNumber("P Gain", kP);
         SmartDashboard.putNumber("I Gain", kI);
         SmartDashboard.putNumber("D Gain", kD);
@@ -67,13 +101,16 @@ public class ArmSubsystem extends SubsystemBase
         SmartDashboard.putNumber("Feed Forward", kFF);
         SmartDashboard.putNumber("Max Output", kMaxOutput);
         SmartDashboard.putNumber("Min Output", kMinOutput);
+
+
+
         
-        SmartDashboard.putNumberArray("Rotation Map", rotationMap);
-        SmartDashboard.putNumber("current Rotation", currentRotation);
+        //SmartDashboard.putNumberArray("Rotation Map", rotationMap);
+        for (int r = 0; r < rotationMap.length; r++) {
+            SmartDashboard.putNumber("Rotation Map of " + r, rotationMap[r]);
+        }
         SmartDashboard.putString("current Position", currentPosition.name());
 
-        SmartDashboard.putBoolean("Forward Limit Enabled", m_forwardLimit.isLimitSwitchEnabled());
-        SmartDashboard.putBoolean("Reverse Limit Enabled", m_reverseLimit.isLimitSwitchEnabled());
         /* 
         use SmartDashboard tabs
         m_tab.add("P Gain", kP).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1));
@@ -104,13 +141,39 @@ public class ArmSubsystem extends SubsystemBase
         double max = SmartDashboard.getNumber("Max Output", kMaxOutput);
         double min = SmartDashboard.getNumber("Min Output", kMinOutput);
         
-        double[] newRotationMap = SmartDashboard.getNumberArray("Rotation Map", this.rotationMap);
-        this.rotationMap = newRotationMap;
         
         SmartDashboard.putNumber("current Rotation", m_armEncoder.getPosition());
         SmartDashboard.putString("current Position", currentPosition.name());
+
         SmartDashboard.putBoolean("Forward Limit Switch", m_forwardLimit.isPressed());
         SmartDashboard.putBoolean("Reverse Limit Switch", m_reverseLimit.isPressed());
+
+        
+
+
+        float forwardSoftLimit = (float) SmartDashboard.getNumber("Forward Soft Limit", FORWARD_SOFT_LIMIT);
+        float reverseSoftLimit = (float) SmartDashboard.getNumber("Reverse Soft Limit", REVERSE_SOFT_LIMIT);
+        if (forwardSoftLimit != FORWARD_SOFT_LIMIT) {
+            m_armMotor.setSoftLimit(CANSparkMax.SoftLimitDirection.kForward, forwardSoftLimit);
+            FORWARD_SOFT_LIMIT = forwardSoftLimit;
+        }
+        if (reverseSoftLimit != REVERSE_SOFT_LIMIT) {
+            m_armMotor.setSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, reverseSoftLimit);
+            REVERSE_SOFT_LIMIT = reverseSoftLimit;
+        }
+        //update these
+        //m_armPIDController.setSmartMotionMaxAccel(maxAccel, PID_SLOT_ID);
+        //m_armPIDController.setSmartMotionMaxVelocity(maxVelocity, PID_SLOT_ID);
+        double newMaxAccel = SmartDashboard.getNumber("Max Accel", maxAccel);
+        double newMaxVelocity = SmartDashboard.getNumber("Max Velocity", maxVelocity);
+        if (newMaxAccel != maxAccel) {
+            m_armPIDController.setSmartMotionMaxAccel(newMaxAccel, PID_SLOT_ID);
+            maxAccel = newMaxAccel;
+        }
+        if (newMaxVelocity != maxVelocity) {
+            m_armPIDController.setSmartMotionMaxVelocity(newMaxVelocity, PID_SLOT_ID);
+            maxVelocity = newMaxVelocity;
+        }
         
         if((p != kP)) { m_armPIDController.setP(p); kP = p; }
         if((i != kI)) { m_armPIDController.setI(i); kI = i; }
@@ -126,31 +189,31 @@ public class ArmSubsystem extends SubsystemBase
         }
     }
     public void setArmPosition(Position toSet) {
-        m_armPIDController.setReference(rotationMap[toSet.position], CANSparkMax.ControlType.kPosition);
+        m_armPIDController.setReference(rotationMap[toSet.position], CANSparkMax.ControlType.kPosition, PID_SLOT_ID);
     }
     public Position raiseArmPosition() {
         
         Position toSet = currentPosition.raise();
-        m_armPIDController.setReference(rotationMap[toSet.position], CANSparkMax.ControlType.kPosition);
+        m_armPIDController.setReference(rotationMap[toSet.position], CANSparkMax.ControlType.kPosition, PID_SLOT_ID);
         this.currentPosition = toSet;
         return currentPosition;
     }
     public Position lowerArmPosition() {
         Position toSet = currentPosition.lower();
-        m_armPIDController.setReference(rotationMap[toSet.position], CANSparkMax.ControlType.kPosition);
+        m_armPIDController.setReference(rotationMap[toSet.position], CANSparkMax.ControlType.kPosition, PID_SLOT_ID);
         this.currentPosition = toSet;
         return currentPosition;
     }
     
     public Position refreshArmPosition() {
-        m_armPIDController.setReference(rotationMap[currentPosition.position], CANSparkMax.ControlType.kPosition);
+        m_armPIDController.setReference(rotationMap[currentPosition.position], CANSparkMax.ControlType.kPosition, PID_SLOT_ID);
         return currentPosition;
     }
     
     
     public void setArmSpeed(double joystickInput) {
         //FIXME add limit switches here or encoder max values
-        m_armPIDController.setReference(-joystickInput * Constants.MAX_Voltage * (0.001), CANSparkMax.ControlType.kVoltage);
+        m_armPIDController.setReference(-joystickInput * Constants.MAX_Voltage * (0.001), CANSparkMax.ControlType.kVoltage, PID_SLOT_ID);
     }
     
     public enum Position{
