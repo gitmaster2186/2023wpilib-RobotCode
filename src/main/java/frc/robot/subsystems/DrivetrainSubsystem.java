@@ -225,8 +225,8 @@ public static final double MAX_VELOCITY_METERS_PER_SECOND = 4000 / 60.0 *
         SmartDashboard.putNumber("pid_output",pid_output );
 
         
-        m_chassisSpeeds=new ChassisSpeeds(DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND*pid_output*-1, 0.000001,0);
-        m_chassisSpeeds=new ChassisSpeeds(DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND*pid_output*-1, -0.000001,0);
+        m_chassisSpeeds=new ChassisSpeeds(DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND*pid_output*-1, Constants.minYSpeed,0);
+        m_chassisSpeeds=new ChassisSpeeds(DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND*pid_output*-1, Constants.minXSpeed ,0);
 
       
       }
