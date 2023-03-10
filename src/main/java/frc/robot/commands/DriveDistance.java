@@ -13,7 +13,7 @@ public class DriveDistance extends CommandBase {
   private final DrivetrainSubsystem m_drive;
   private final double m_distance;
   private final double m_speed;
-
+  private double start_pos_x=0.0;
   /**
    * Creates a new DriveDistance. This command will drive your your robot for a desired distance at
    * a desired speed.
@@ -35,7 +35,9 @@ public class DriveDistance extends CommandBase {
     
     m_drive.drive ( new ChassisSpeeds(0, 0, 0));
     // m_drive.zeroGyroscope();
-    m_drive.SwerveDriveOdomertyInitialize();
+   m_drive.SwerveDriveOdomertyInitialize();
+   start_pos_x=m_drive.getCurrentPose().getX();
+   System.out.print(start_pos_x);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -54,6 +56,7 @@ public class DriveDistance extends CommandBase {
   @Override
   public boolean isFinished() {
     // Compare distance travelled from start to desired distance
-    return Math.abs(m_drive.getCurrentPose().getX()) >= m_distance;
+    return Math.abs(m_drive.getCurrentPose().getX()-start_pos_x) >= m_distance;
+   //return false;
   }
 }

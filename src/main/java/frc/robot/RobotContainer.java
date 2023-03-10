@@ -15,6 +15,8 @@ import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
 
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.commands.AutonomousDistance;
+import frc.robot.commands.AutonomousTime;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.PlatformDockPidCommand_Pitch;
 
@@ -84,7 +86,9 @@ public class RobotContainer {
             public Command getAutonomousCommand( ){
                 // An ExampleCommand will run in autonomous
                 //return new InstantCommand();
-                return new PlatformDockPidCommand_Pitch(m_drivetrainSubsystem);
+                //return new PlatformDockPidCommand_Pitch(m_drivetrainSubsystem);
+                return new AutonomousDistance(m_drivetrainSubsystem);
+               // return new AutonomousTime(m_drivetrainSubsystem);
             }
             
             private static double deadband(double value, double deadband) {
