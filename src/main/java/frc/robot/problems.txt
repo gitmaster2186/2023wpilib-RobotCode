@@ -1,0 +1,9 @@
+1. Jittering while driving without turning(Prabhu- Confused about navx issues)
+2. Motor rod to move arm is bent at full extension. 
+(Need to have limit switches before it bends the rod)
+3. Arm is off center (Mechanical- considered normal because it doesn't cause any 
+major issues.)
+4. Arm didn't go fully down after full extension (ArmSubsystem- Sahil)
+5. Sahil is wrong, the back limit switch CANNOT be hit when the arm goes all 
+the way back.(Mechanical/Software Sahil)
+6. Without soft limit switches. Max limit value = 105.5 ish Min limit switch = +0.5
