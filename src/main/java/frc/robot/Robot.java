@@ -21,6 +21,8 @@ public class Robot extends TimedRobot {
     public  SmartDashboard m_SmartDashboard;
     private RobotContainer m_robotContainer;
     
+    private double initialPosition = 0.0;
+
     /**
     * This function is run when the robot is first started up and should be used for any
     * initialization code.
@@ -114,5 +116,14 @@ public class Robot extends TimedRobot {
         /** This function is called periodically during test mode. */
         @Override
         public void testPeriodic() {}
+
+        public void setInitialPosition(double position) {
+            initialPosition = position;
+            SmartDashboard.putNumber("Robot Position", initialPosition);
+        }
+    
+        public double getInitialPosition() {
+            return initialPosition;
+        }
     }
     
