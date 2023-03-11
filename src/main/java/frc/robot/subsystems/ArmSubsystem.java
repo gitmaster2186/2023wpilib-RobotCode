@@ -25,11 +25,9 @@ public class ArmSubsystem extends SubsystemBase
     public static CANSparkMax m_armMotor;
     private SparkMaxPIDController m_armPIDController;
     private RelativeEncoder m_armEncoder;
-    private double currentRotation;
     private Position currentPosition = Position.ground;
     private double[] rotationMap = {-10, -30, -50, -70, -80}; //move to constants eventually
     private double currentRotation = 0;
-    private boolean enableLimitSwitch = true;
     //FIXME Change these values when needed
     // 0.3 is the max speed that it can accelerate at any given moment. 
     public SlewRateLimiter joystickLimiter = new SlewRateLimiter(0.3);
@@ -40,8 +38,6 @@ public class ArmSubsystem extends SubsystemBase
     //limit switch MIN (lowest position): 1.8
 
     //create the roation map
-    private double[] rotationMap = {-10, -20, -50, -60, -70}; //move to constants eventually
-
     //create limit configuration variables
     public final double DEADBAND = 0.1;
     private boolean isLimitSwitchEnabled = false;
