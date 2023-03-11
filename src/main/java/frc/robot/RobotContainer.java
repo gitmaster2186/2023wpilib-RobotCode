@@ -101,7 +101,9 @@ SendableChooser<Command> m_chooser = new SendableChooser<>();
             public Command getAutonomousCommand( ){
                 // An ExampleCommand will run in autonomous
                 //return new InstantCommand();
-                return new PlatformDockPidCommand_Pitch(m_drivetrainSubsystem);
+               // return new PlatformDockPidCommand_Pitch(m_drivetrainSubsystem);
+               m_drivetrainSubsystem.drive ( new ChassisSpeeds(0, 0, 0));
+               return new AutonomousDistance(m_drivetrainSubsystem);
             }
             
             private static double deadband(double value, double deadband) {

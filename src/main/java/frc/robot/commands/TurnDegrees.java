@@ -13,7 +13,7 @@ public class TurnDegrees extends CommandBase {
   private final DrivetrainSubsystem m_drive;
   private final double m_degrees;
   private final double m_speed;
-
+private double m_start_degree=0;
   /**
    * Creates a new TurnDegrees. This command will turn your robot for a desired rotation (in
    * degrees) and rotational speed.
@@ -36,6 +36,8 @@ public class TurnDegrees extends CommandBase {
     m_drive.drive( new ChassisSpeeds());
     // m_drive.zeroGyroscope();
     m_drive.SwerveDriveOdomertyInitialize();
+    m_start_degree=m_drive.getCurrentPose().getRotation().getDegrees();
+  System.out.print(m_start_degree);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -54,7 +56,8 @@ public class TurnDegrees extends CommandBase {
   @Override
   public boolean isFinished() {
     
-    return m_drive.getCurrentPose().getRotation().getDegrees() >=m_degrees;
+   // return m_drive.getCurrentPose().getRotation().getDegrees() -m_degrees>=1;
+   return false;
   }
 
 

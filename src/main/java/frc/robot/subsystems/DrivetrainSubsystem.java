@@ -216,7 +216,7 @@ public static final double MAX_VELOCITY_METERS_PER_SECOND = 4000 / 60.0 *
   }
 
   
-  public void drive_pid_x(double pid_output) {
+  public void drive_pid_pitch(double pid_output) {
         SmartDashboard.putNumber("getPitch",m_navx.getPitch() );
         SmartDashboard.putNumber("getRoll",m_navx.getRoll() );
         SmartDashboard.putNumber("getYaw",m_navx.getYaw() );
@@ -249,6 +249,8 @@ public static final double MAX_VELOCITY_METERS_PER_SECOND = 4000 / 60.0 *
 
     SmartDashboard.putNumber("Current Pose X at Drive Train" ,m_pos.getX());
     SmartDashboard.putNumber("Current Pose Y at Drive Train" ,m_pos.getY());
+    SmartDashboard.putNumber("Current Degress at Drive Train" ,m_pos.getRotation().getDegrees());
+    SmartDashboard.putNumber("Current Rotations at Drive Train" ,m_pos.getRotation().getRotations());
     
   }
 
