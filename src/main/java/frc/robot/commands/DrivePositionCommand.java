@@ -13,6 +13,7 @@ import frc.robot.subsystems.DrivetrainSubsystem;
 
 
 public class DrivePositionCommand extends CommandBase {
+
   SwerveDriveOdometry m_subsystemOdometry;
   DrivetrainSubsystem this_DrivetrainSubsystem;
   Pose2d this_desired_pose;
@@ -51,17 +52,19 @@ public class DrivePositionCommand extends CommandBase {
     this_DrivetrainSubsystem.drive_parameters((this_desired_pose.getX()-m_currentPose.getX()) * Constants.MINIMUM_DISPLACEMENT,(this_desired_pose.getY()-m_currentPose.getY())*Constants.SPEED_SCALE_FACTOR,this_desired_pose.getRotation().getRadians());
   }
 
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {}
-
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    //check Pose2d vs what we want
-    return (this_DrivetrainSubsystem.getCurrentPose().getX()-this_desired_pose.getX()< 0.1) &&  (this_DrivetrainSubsystem.getCurrentPose().getY()-this_desired_pose.getY()< 0.1) ;
     
+    // Called once the command ends or is interrupted.
+    @Override
+    public void end(boolean interrupted) {}
     
-  
-}
+    // Returns true when the command should end.
+    @Override
+    public boolean isFinished() {
+        //check Pose2d vs what we want
+        return (Math.abs(this_DrivetrainSubsystem.getCurrentPose().getX()-this_desired_pose.getX())< Constants.MINIMUM_DISPLACEMENT) &&
+          (Math.abs(this_DrivetrainSubsystem.getCurrentPose().getY()-this_desired_pose.getY())< Constants.MINIMUM_DISPLACEMENT) ;
+        
+        
+        
+    }
 }
