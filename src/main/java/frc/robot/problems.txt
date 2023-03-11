@@ -6,4 +6,4 @@ major issues.)
 4. Arm didn't go fully down after full extension (ArmSubsystem- Sahil)
 5. Sahil is wrong, the back limit switch CANNOT be hit when the arm goes all 
 the way back.(Mechanical/Software Sahil)
-6. Without soft limit switches. Max limit value = 105.5 ish Min limit switch = +0.5
+6. Without soft limit switches. Max limit value = -105.5 ish Min limit switch = +0.5
