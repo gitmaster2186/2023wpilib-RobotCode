@@ -15,7 +15,7 @@ public class AutonomousDistance extends SequentialCommandGroup {
    *
    * @param drivetrain The drivetrain subsystem on which this command will run
    */
-  public AutonomousDistance(DrivetrainSubsystem drivetrainsubsystem) {
+  public AutonomousDistance(DrivetrainSubsystem drivetrainsubsystem, String startingPosition) {
     addCommands(
         new DriveDistance(-0.05, 10, drivetrainsubsystem),
         new TurnDegrees(-0.05, 180, drivetrainsubsystem),

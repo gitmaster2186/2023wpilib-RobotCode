@@ -8,6 +8,9 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -17,6 +20,7 @@ import frc.robot.subsystems.DrivetrainSubsystem;
 
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.ArmSpeedCommand;
+import frc.robot.commands.AutonomousDistance;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.PlatformDockPidCommand_Pitch;
 
@@ -26,10 +30,14 @@ public class RobotContainer {
     final ArmSubsystem m_armSubsystem = new ArmSubsystem();
 
     
+    final Robot m_robot = new Robot();
+
     final CommandXboxController m_controller = new CommandXboxController(0);
     final CommandXboxController m_subcontroller = new CommandXboxController(1);
     Command zeroJoystickCommand;
     
+    final ShuffleboardTab main_Tab = Shuffleboard.getTab("Main Tab");
+    private final SendableChooser<String> startingPositionChooser = new SendableChooser<>();
     
     
     public RobotContainer() {
@@ -39,7 +47,14 @@ public class RobotContainer {
         // Left stick X axis -> left and right movement
         // Right stick X axis -> rotation
         
+        startingPositionChooser.setDefaultOption("Left", "Left");
+        startingPositionChooser.addOption("Center", "Center");
+        startingPositionChooser.addOption("Right", "Right");
         
+        
+        SmartDashboard.putData("Starting Position", startingPositionChooser);
+        main_Tab.add(startingPositionChooser);
+    
         //Prabhu Initialize Drive system to forward facing
         m_drivetrainSubsystem.drive(
         ChassisSpeeds.fromFieldRelativeSpeeds(
@@ -88,7 +103,11 @@ public class RobotContainer {
             public Command getAutonomousCommand( ){
                 // An ExampleCommand will run in autonomous
                 //return new InstantCommand();
-                return new PlatformDockPidCommand_Pitch(m_drivetrainSubsystem);
+                String startingPosition = startingPositionChooser.getSelected();
+                return new AutonomousDistance(m_drivetrainSubsystem, startingPosition);
+
+                // Add the below PID Algorithmn to sequence after the robot has made it to the charging station
+                // return new PlatformDockPidCommand_Pitch(m_drivetrainSubsystem);
             }
             
             private static double deadband(double value, double deadband) {
@@ -112,5 +131,9 @@ public class RobotContainer {
                 
                 return value;
             }
+            public final Robot getRobot(){
+                return m_robot;
+            }
+
         }
         
