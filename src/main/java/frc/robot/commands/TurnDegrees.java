@@ -13,7 +13,7 @@ public class TurnDegrees extends CommandBase {
   private final DrivetrainSubsystem m_drive;
   private final double m_degrees;
   private final double m_speed;
-
+private double m_start_degree=0;
   /**
    * Creates a new TurnDegrees. This command will turn your robot for a desired rotation (in
    * degrees) and rotational speed.
@@ -36,31 +36,28 @@ public class TurnDegrees extends CommandBase {
     m_drive.drive( new ChassisSpeeds());
     // m_drive.zeroGyroscope();
     m_drive.SwerveDriveOdomertyInitialize();
+    m_start_degree=m_drive.getCurrentPose().getRotation().getDegrees();
+  System.out.print(m_start_degree);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_drive.drive ( new ChassisSpeeds(0, 0, m_degrees/2*Math.PI ));
+    m_drive.drive ( new ChassisSpeeds(0, 0, m_speed));
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_drive.drive( new ChassisSpeeds(0, 0, m_degrees/2*Math.PI ));
+    m_drive.drive( new ChassisSpeeds(0, 0, 0 ));
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    /* Need to convert distance travelled to degrees. The Standard
-       Romi Chassis found here, https://www.pololu.com/category/203/romi-chassis-kits,
-       has a wheel placement diameter (149 mm) - width of the wheel (8 mm) = 141 mm
-       or 5.551 inches. We then take into consideration the width of the tires.
-    */
-
-    // Compare distance travelled from start to distance based on degree turn
-    return m_drive.getCurrentPose().getRotation().getDegrees() >=m_degrees;
+    
+   // return m_drive.getCurrentPose().getRotation().getDegrees() -m_degrees>=1;
+   return false;
   }
 
 
