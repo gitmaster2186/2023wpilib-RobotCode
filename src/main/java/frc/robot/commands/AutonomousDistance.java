@@ -18,6 +18,7 @@ public class AutonomousDistance extends SequentialCommandGroup {
   public AutonomousDistance(DrivetrainSubsystem drivetrainsubsystem, String startingPosition) {
     addCommands(
       //  new DriveDistance(2, 1, drivetrainsubsystem),
+      new SetInitialStartPosition(startingPosition),
       new PlatformDockPidCommand_Pitch(drivetrainsubsystem)
      //   new TurnDegrees(1, 90, drivetrainsubsystem),
      //   new DriveDistance(-2, 1, drivetrainsubsystem)
