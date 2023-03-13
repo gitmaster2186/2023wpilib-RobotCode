@@ -27,7 +27,7 @@ public final class Constants {
 
     public static final double kP = 0.03;
     public static final double kI = 0.0;
-    public static final double kD = 0.05;
+    public static final double kD = 0.01;
     
     public static final double DRIVETRAIN_WHEELBASE_METERS = 0.6604; // FIXME Measure and set wheelbase
 
@@ -57,6 +57,8 @@ public final class Constants {
     public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 13; // FIXME Set back right steer encoder ID
     // public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(207.4); // FIXME Measure and set back right steer offset
     public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(205.8); // FIXME Measure and set back right steer offset
+    public static final double MINIMUM_DISPLACEMENT = 0;
+    public static final double SPEED_SCALE_FACTOR = 0;
 
       // Prabhu - Max voltage changed from 12 to 2
     public static double MAX_Voltage=2;
