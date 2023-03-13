@@ -18,9 +18,15 @@ public class AutonomousDistance extends SequentialCommandGroup {
   public AutonomousDistance(DrivetrainSubsystem drivetrainsubsystem) {
     //drivetrainsubsystem.SwerveDriveOdomertyInitialize();
     addCommands(
-     // new DriveDistance_x(2, 0.6, drivetrainsubsystem),
+      // positive x meters is forward
+      // Positive y meters is left
+      // Drive distance x is not as accurate on trailer floor due to higher speed (>=2)
+      new DriveDistance_x(-1, 0.6, drivetrainsubsystem),
+       new DriveDistance_y(-1, 0.6, drivetrainsubsystem)
+       
     // new DriveDistance_y(2, 0.5, drivetrainsubsystem)
-      new PlatformDockPidCommand_Pitch(drivetrainsubsystem)
+
+     // new PlatformDockPidCommand_Pitch(drivetrainsubsystem)
     //new TurnDegrees(3, 90,1, drivetrainsubsystem)
      // new DriveDistance_x(-2, 2, drivetrainsubsystem)
      //new DriveDistance_y(-2, 0.5, drivetrainsubsystem)
