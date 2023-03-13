@@ -70,5 +70,5 @@ public final class Constants {
     public static final double minXSpeed = -0.000001;
 
     // Prabhu - Max voltage changed from 12 to 2
-    public static double MAX_Voltage=2;
+    public static double MAX_Voltage=3;
 }

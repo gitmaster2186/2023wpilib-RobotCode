@@ -4,7 +4,6 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.sensors.PigeonIMU;
 import com.swervedrivespecialties.swervelib.Mk4iSwerveModuleHelper;
 import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
 import com.swervedrivespecialties.swervelib.SwerveModule;
@@ -217,7 +216,7 @@ public static final double MAX_VELOCITY_METERS_PER_SECOND = 4000 / 60.0 *
   }
 
   
-  public void drive_pid_x(double pid_output) {
+  public void drive_pid_pitch(double pid_output) {
         SmartDashboard.putNumber("getPitch",m_navx.getPitch() );
         SmartDashboard.putNumber("getRoll",m_navx.getRoll() );
         SmartDashboard.putNumber("getYaw",m_navx.getYaw() );
@@ -250,6 +249,8 @@ public static final double MAX_VELOCITY_METERS_PER_SECOND = 4000 / 60.0 *
 
     SmartDashboard.putNumber("Current Pose X at Drive Train" ,m_pos.getX());
     SmartDashboard.putNumber("Current Pose Y at Drive Train" ,m_pos.getY());
+    SmartDashboard.putNumber("Current Degress at Drive Train" ,m_pos.getRotation().getDegrees());
+    SmartDashboard.putNumber("Current Rotations at Drive Train" ,m_pos.getRotation().getRotations());
     
   }
 
@@ -261,7 +262,7 @@ public static final double MAX_VELOCITY_METERS_PER_SECOND = 4000 / 60.0 *
      SwerveModulePosition m_backLeftModule_position=new SwerveModulePosition(m_backLeftModule.getDriveDistance(), new Rotation2d(m_backLeftModule.getSteerAngle()));
      SwerveModulePosition m_backRightModule_position=new SwerveModulePosition(m_backRightModule.getDriveDistance(), new Rotation2d(m_backRightModule.getSteerAngle()));
      SwerveModulePosition[] m_modulePositions = new SwerveModulePosition[4];
-     Arrays.fill(m_modulePositions, new SwerveModuleState());
+     Arrays.fill(m_modulePositions, new SwerveModulePosition());
      m_modulePositions[0]=m_frontLeftModule_position;
      m_modulePositions[1]=m_frontRightModule_position;
      m_modulePositions[2]=m_backLeftModule_position;
@@ -277,10 +278,10 @@ public static final double MAX_VELOCITY_METERS_PER_SECOND = 4000 / 60.0 *
  //Creating my odometry object from the kinematics object and the initial wheel positions.
     // Here, our starting pose is 5 meters along the long end of the field and in the
     // center of the field along the short end, facing the opposing alliance wall.
-    SwerveModulePosition m_frontLeftModule_position=new SwerveModulePosition();
-    SwerveModulePosition m_frontRightModule_position=new SwerveModulePosition();
-    SwerveModulePosition m_backLeftModule_position=new SwerveModulePosition();
-    SwerveModulePosition m_backRightModule_position=new SwerveModulePosition();
+    SwerveModulePosition m_frontLeftModule_position=new SwerveModulePosition(0,new Rotation2d(0));
+    SwerveModulePosition m_frontRightModule_position=new SwerveModulePosition(0,new Rotation2d(0));
+    SwerveModulePosition m_backLeftModule_position=new SwerveModulePosition(0,new Rotation2d(0));
+    SwerveModulePosition m_backRightModule_position=new SwerveModulePosition(0,new Rotation2d(0));
 
     SwerveModulePosition[] m_modulePositions = new SwerveModulePosition[4];
 
