@@ -16,10 +16,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.ClawSubsystem;
+import frc.robot.subsystems.ClawSubsystem.Object;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.ArmSubsystem.Position;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.AutonomousDistance;
+import frc.robot.commands.ClawSpeedCommand;
 import frc.robot.commands.ArmSpeedCommand;
 import frc.robot.commands.AutonomousDistance;
 import frc.robot.commands.DefaultDriveCommand;
@@ -27,10 +30,11 @@ import frc.robot.commands.DrivePositionCommand;
 import frc.robot.commands.PlatformDockPidCommand_Pitch;
 
 
+
 public class RobotContainer {
     final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
     final ArmSubsystem m_armSubsystem = new ArmSubsystem();
-
+    final ClawSubsystem m_clawSubsystem = new ClawSubsystem();
     
     final Robot m_robot = new Robot();
 
@@ -103,6 +107,12 @@ public class RobotContainer {
                 // Joystick Control for arm bindings
                 m_subcontroller.axisGreaterThan(XboxController.Axis.kLeftY.value, m_armSubsystem.DEADBAND).onTrue(new ArmSpeedCommand(() -> m_subcontroller.getLeftY(), m_armSubsystem));
                 m_subcontroller.axisLessThan(XboxController.Axis.kLeftY.value, -m_armSubsystem.DEADBAND).onTrue(new ArmSpeedCommand(() -> m_subcontroller.getLeftY(), m_armSubsystem));
+
+                m_controller.axisGreaterThan(XboxController.Axis.kRightTrigger.value, 0.15).onTrue(new ClawSpeedCommand(() -> m_controller.getRightTriggerAxis(), m_clawSubsystem));
+                m_controller.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, 0.8).onTrue(Commands.runOnce(() -> m_clawSubsystem.setClawPosition(Object.empty)));
+                m_controller.axisGreaterThan(XboxController.Axis.kLeftY.value, m_clawSubsystem.DEADBAND).onTrue(new ClawSpeedCommand(() -> m_controller.getLeftY(), m_clawSubsystem));
+                m_controller.axisLessThan(XboxController.Axis.kLeftY.value, -m_clawSubsystem.DEADBAND).onTrue(new ClawSpeedCommand(() -> m_controller.getLeftY(), m_clawSubsystem));
+
                 
             }
             
