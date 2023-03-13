@@ -20,7 +20,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 public class ArmSubsystem extends SubsystemBase 
 {
     //declare subsystem variables
-    private static final int ARM_MOTOR_ID = 15;
+    private static final int ARM_MOTOR_ID = Constants.ARM_MOTOR_ID;
     public static CANSparkMax m_armMotor;
     private SparkMaxPIDController m_armPIDController;
     private RelativeEncoder m_armEncoder;
@@ -39,13 +39,14 @@ public class ArmSubsystem extends SubsystemBase
     private SparkMaxLimitSwitch m_forwardLimit;
     private SparkMaxLimitSwitch m_reverseLimit;
     private final int PID_SLOT_ID = 0;
-    private final double MAX_VOLTAGE = 7;
+    private final double MAX_VOLTAGE = 7; //manual max speeds
     //private double maxAccel = 10; //in RPM/s
     //private double maxVelocity = 10; //in RPM
 
         
     //PID values from documentation here https://github.com/REVrobotics/SPARK-MAX-Examples
-    private double kP = 0.45, kI = 1e-5, kD = 1, kIz = 0, kFF = 0, kMaxOutput = 0.6, kMinOutput = -0.6;
+    private double kP = 0.45, kI = 1e-5, kD = 1, kIz = 0, kFF = 0, 
+    kMaxOutput = 0.6, kMinOutput = -0.6; //PID max speeds
     
     public ArmSubsystem() {
         m_armMotor = new CANSparkMax(ARM_MOTOR_ID, MotorType.kBrushless);
