@@ -21,6 +21,7 @@ import frc.robot.subsystems.DrivetrainSubsystem;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.AutonomousDistance;
 import frc.robot.commands.ArmSpeedCommand;
+import frc.robot.commands.AutonomousDistance;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.DrivePositionCommand;
 import frc.robot.commands.PlatformDockPidCommand_Pitch;
@@ -31,29 +32,30 @@ public class RobotContainer {
     final ArmSubsystem m_armSubsystem = new ArmSubsystem();
 
     
+    final Robot m_robot = new Robot();
+
     final CommandXboxController m_controller = new CommandXboxController(0);
     final CommandXboxController m_subcontroller = new CommandXboxController(1);
     Command zeroJoystickCommand;
-    final ShuffleboardTab tab =  Shuffleboard.getTab("Main Tab");
-    // Change these to match our plan for each position
-    private final Command m_leftPositionCommand =   new AutonomousDistance(m_drivetrainSubsystem);
-private final Command m_middlePositionCommand = getAutonomousCommand();
-private final Command m_rightPositionCommand = new DrivePositionCommand(m_drivetrainSubsystem, new Pose2d(5.0, 4.9, m_drivetrainSubsystem.getGyroscopeRotation()));
-
-// A chooser for autonomous commands
-SendableChooser<Command> m_chooser = new SendableChooser<>();
-
     
+    final ShuffleboardTab main_Tab = Shuffleboard.getTab("Main Tab");
+    private final SendableChooser<String> startingPositionChooser = new SendableChooser<>();
+        
     public RobotContainer() {
         // Set up the default command for the drivetrain.
         // The controls are for field-oriented driving:
         // Left stick Y axis -> forward and backwards movement
         // Left stick X axis -> left and right movement
         // Right stick X axis -> rotation
-        m_chooser.setDefaultOption("Right Position", m_rightPositionCommand);
-        m_chooser.addOption("Left Position", m_leftPositionCommand);
-        m_chooser.addOption("Middle Position", m_middlePositionCommand);
-        tab.add(m_chooser);
+        
+        startingPositionChooser.setDefaultOption("Left", "Left");
+        startingPositionChooser.addOption("Center", "Center");
+        startingPositionChooser.addOption("Right", "Right");
+        
+        
+        SmartDashboard.putData("Starting Position", startingPositionChooser);
+        main_Tab.add(startingPositionChooser);
+    
         //Prabhu Initialize Drive system to forward facing
         m_drivetrainSubsystem.drive(
         ChassisSpeeds.fromFieldRelativeSpeeds(
@@ -106,9 +108,11 @@ SendableChooser<Command> m_chooser = new SendableChooser<>();
             public Command getAutonomousCommand( ){
                 // An ExampleCommand will run in autonomous
                 //return new InstantCommand();
-               // return new PlatformDockPidCommand_Pitch(m_drivetrainSubsystem);
-               m_drivetrainSubsystem.drive ( new ChassisSpeeds(0, 0, 0));
-               return new AutonomousDistance(m_drivetrainSubsystem);
+                String startingPosition = startingPositionChooser.getSelected();
+                return new AutonomousDistance(m_drivetrainSubsystem, startingPosition);
+
+                // Add the below PID Algorithmn to sequence after the robot has made it to the charging station
+                // return new PlatformDockPidCommand_Pitch(m_drivetrainSubsystem);
             }
             
             private static double deadband(double value, double deadband) {
@@ -132,5 +136,9 @@ SendableChooser<Command> m_chooser = new SendableChooser<>();
                 
                 return value;
             }
+            public final Robot getRobot(){
+                return m_robot;
+            }
+
         }
         
