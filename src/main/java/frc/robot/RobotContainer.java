@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
-
+import frc.robot.subsystems.ArmSubsystem.Position;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.ArmSpeedCommand;
 import frc.robot.commands.DefaultDriveCommand;
@@ -70,11 +70,17 @@ public class RobotContainer {
             * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
             */
             private void configureButtonBindings() {
+                // First button when hit y button runs autonomous Command(Add what it does here)
                 m_subcontroller.y().onTrue(getAutonomousCommand());
                 m_subcontroller.povDown().onTrue(Commands.runOnce(() -> m_drivetrainSubsystem.zeroGyroscope(), m_drivetrainSubsystem));
 
+                // Button mappings for arm positions for scoring
+                m_subcontroller.x().onTrue(Commands.runOnce(() -> m_armSubsystem.setArmPosition(Position.coneHigh), m_armSubsystem));
+                m_subcontroller.a().onTrue(Commands.runOnce(() -> m_armSubsystem.setArmPosition(Position.coneLow), m_armSubsystem));
+                m_subcontroller.b().onTrue(Commands.runOnce(() -> m_armSubsystem.setArmPosition(Position.ground), m_armSubsystem));
                 m_subcontroller.leftBumper().onTrue(Commands.runOnce(() -> m_armSubsystem.lowerArmPosition(), m_armSubsystem));
                 m_subcontroller.rightBumper().onTrue(Commands.runOnce(() -> m_armSubsystem.raiseArmPosition(), m_armSubsystem));
+                // Joystick Control for arm bindings
                 m_subcontroller.axisGreaterThan(XboxController.Axis.kLeftY.value, m_armSubsystem.DEADBAND).onTrue(new ArmSpeedCommand(() -> m_subcontroller.getLeftY(), m_armSubsystem));
                 m_subcontroller.axisLessThan(XboxController.Axis.kLeftY.value, m_armSubsystem.DEADBAND).onTrue(new ArmSpeedCommand(() -> m_subcontroller.getLeftY(), m_armSubsystem));
                 

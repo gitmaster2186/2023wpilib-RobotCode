@@ -20,7 +20,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 public class ClawSubsystem extends SubsystemBase 
 {
     //declare subsystem variables
-    private static final int ARM_MOTOR_ID = Constants.CLAW_MOTOR_ID;
+    private static final int CLAW_MOTOR_ID = Constants.CLAW_MOTOR_ID;
     public static CANSparkMax m_clawMotor;
     private SparkMaxPIDController m_clawPIDController;
     private RelativeEncoder m_clawEncoder;
@@ -47,7 +47,7 @@ public class ClawSubsystem extends SubsystemBase
     private double kP = 0.45, kI = 1e-5, kD = 1, kIz = 0, kFF = 0, kMaxOutput = 0.35, kMinOutput = -0.35;
     
     public ClawSubsystem() {
-        m_clawMotor = new CANSparkMax(ARM_MOTOR_ID, MotorType.kBrushless);
+        m_clawMotor = new CANSparkMax(CLAW_MOTOR_ID, MotorType.kBrushless);
         m_clawMotor.restoreFactoryDefaults();
         m_clawMotor.setIdleMode(IdleMode.kBrake);
         m_clawPIDController = m_clawMotor.getPIDController();
@@ -177,24 +177,25 @@ public class ClawSubsystem extends SubsystemBase
             rotationMap[r] = SmartDashboard.getNumber("Rotation Map of " + r, rotationMap[r]);
         }
     }
-    public void setArmPosition(Position toSet) {
-        m_clawPIDController.setReference(rotationMap[toSet.position], CANSparkMax.ControlType.kPosition, PID_SLOT_ID);
-    }
-    public Position raiseArmPosition() {
+    // I don't know if we need this method here. Uncomment if needed
+    // public void setClawPosition(Position toSet) {
+    //     m_clawPIDController.setReference(rotationMap[toSet.position], CANSparkMax.ControlType.kPosition, PID_SLOT_ID);
+    // }
+    public Position openClawPosition() {
         
         Position toSet = currentPosition.raise();
         m_clawPIDController.setReference(rotationMap[toSet.position], CANSparkMax.ControlType.kPosition, PID_SLOT_ID);
         this.currentPosition = toSet;
         return currentPosition;
     }
-    public Position lowerArmPosition() {
+    public Position closeClawPosition() {
         Position toSet = currentPosition.lower();
         m_clawPIDController.setReference(rotationMap[toSet.position], CANSparkMax.ControlType.kPosition, PID_SLOT_ID);
         this.currentPosition = toSet;
         return currentPosition;
     }
     
-    public void setArmSpeed(double joystickInput) {
+    public void setClawSpeed(double joystickInput) {
         //FIXME add limit switches here or encoder max values
         m_clawPIDController.setReference(-joystickInput * Constants.MAX_Voltage, CANSparkMax.ControlType.kVoltage, PID_SLOT_ID);
     }
