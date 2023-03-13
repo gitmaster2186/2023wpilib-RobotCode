@@ -25,7 +25,7 @@ public class ClawSubsystem extends SubsystemBase
     private SparkMaxPIDController m_clawPIDController;
     private RelativeEncoder m_clawEncoder;
     private double currentRotation;
-    private Position currentPosition = Position.empty;
+    private Object currentPosition = Object.empty;
 
     private SparkMaxLimitSwitch m_forwardLimit;
     private SparkMaxLimitSwitch m_reverseLimit;
@@ -35,7 +35,7 @@ public class ClawSubsystem extends SubsystemBase
     private double[] rotationMap = {0, 10, 20};
 
     //create limit configuration variables
-    public final double DEADBAND = 0.1;
+    public final double DEADBAND = 0.25;
     private boolean isLimitSwitchEnabled = true;
     private boolean isSoftLimitEnabled = false; //tune before enabling
     private float FORWARD_SOFT_LIMIT = 1;
@@ -181,15 +181,21 @@ public class ClawSubsystem extends SubsystemBase
     // public void setClawPosition(Position toSet) {
     //     m_clawPIDController.setReference(rotationMap[toSet.position], CANSparkMax.ControlType.kPosition, PID_SLOT_ID);
     // }
-    public Position openClawPosition() {
+    public Object openClawPosition() {
         
-        Position toSet = currentPosition.raise();
+        Object toSet = currentPosition.raise();
         m_clawPIDController.setReference(rotationMap[toSet.position], CANSparkMax.ControlType.kPosition, PID_SLOT_ID);
         this.currentPosition = toSet;
         return currentPosition;
     }
-    public Position closeClawPosition() {
-        Position toSet = currentPosition.lower();
+    public Object closeClawPosition() {
+        Object toSet = currentPosition.lower();
+        m_clawPIDController.setReference(rotationMap[toSet.position], CANSparkMax.ControlType.kPosition, PID_SLOT_ID);
+        this.currentPosition = toSet;
+        return currentPosition;
+    }
+
+    public Object setClawPosition(Object toSet) {
         m_clawPIDController.setReference(rotationMap[toSet.position], CANSparkMax.ControlType.kPosition, PID_SLOT_ID);
         this.currentPosition = toSet;
         return currentPosition;
@@ -200,30 +206,30 @@ public class ClawSubsystem extends SubsystemBase
         m_clawPIDController.setReference(-joystickInput * Constants.MAX_Voltage, CANSparkMax.ControlType.kVoltage, PID_SLOT_ID);
     }
     
-    public enum Position{
+    public enum Object{
         empty(0),
         cone(1),
         cube(2);
         
         public final int position;
         
-        Position(int position){
+        Object(int position){
             this.position = position;
         }
         
-        public Position lower() {
+        public Object lower() {
             if(this.position <= 0) {
                 System.out.println("At lowest position");
                 return this;
             }
-            return Position.values()[this.position - 1];
+            return Object.values()[this.position - 1];
         }
-        public Position raise() {
-            if(this.position >= Position.values().length - 1) {
+        public Object raise() {
+            if(this.position >= Object.values().length - 1) {
                 System.out.println("At max position");
                 return this;
             }
-            return Position.values()[this.position + 1];
+            return Object.values()[this.position + 1];
         }
     }
     
