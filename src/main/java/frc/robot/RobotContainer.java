@@ -15,30 +15,37 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.ArmSubsystem.Position;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.AutonomousDistance;
+import frc.robot.commands.ClawSpeedCommand;
 import frc.robot.commands.ArmSpeedCommand;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.DrivePositionCommand;
 import frc.robot.commands.PlatformDockPidCommand_Pitch;
+import frc.robot.subsystems.ClawSubsystem;
+import frc.robot.subsystems.ClawSubsystem.Object;
+
 
 
 public class RobotContainer {
-    final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
-    final ArmSubsystem m_armSubsystem = new ArmSubsystem();
+    //final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
+    //final ArmSubsystem m_armSubsystem = new ArmSubsystem();
+    //final ClawSubsystem m_clawSubsystem = new ClawSubsystem();
+    final ClawSubsystem m_clawSubsystem = new ClawSubsystem();
 
     
     final CommandXboxController m_controller = new CommandXboxController(0);
-    final CommandXboxController m_subcontroller = new CommandXboxController(1);
-    Command zeroJoystickCommand;
-    final ShuffleboardTab tab =  Shuffleboard.getTab("Main Tab");
+    //final CommandXboxController m_subcontroller = new CommandXboxController(1);
+    //Command zeroJoystickCommand;
+    //final ShuffleboardTab tab =  Shuffleboard.getTab("Main Tab");
     // Change these to match our plan for each position
-    private final Command m_leftPositionCommand =   new AutonomousDistance(m_drivetrainSubsystem);
-private final Command m_middlePositionCommand = getAutonomousCommand();
-private final Command m_rightPositionCommand = new DrivePositionCommand(m_drivetrainSubsystem, new Pose2d(5.0, 4.9, m_drivetrainSubsystem.getGyroscopeRotation()));
+    //private final Command m_leftPositionCommand =   new AutonomousDistance(m_drivetrainSubsystem);
+    //private final Command m_middlePositionCommand = getAutonomousCommand();
+    //private final Command m_rightPositionCommand = new DrivePositionCommand(m_drivetrainSubsystem, new Pose2d(5.0, 4.9, m_drivetrainSubsystem.getGyroscopeRotation()));
 
 // A chooser for autonomous commands
 SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -50,31 +57,31 @@ SendableChooser<Command> m_chooser = new SendableChooser<>();
         // Left stick Y axis -> forward and backwards movement
         // Left stick X axis -> left and right movement
         // Right stick X axis -> rotation
-        m_chooser.setDefaultOption("Right Position", m_rightPositionCommand);
-        m_chooser.addOption("Left Position", m_leftPositionCommand);
-        m_chooser.addOption("Middle Position", m_middlePositionCommand);
-        tab.add(m_chooser);
+        // m_chooser.setDefaultOption("Right Position", m_rightPositionCommand);
+        // m_chooser.addOption("Left Position", m_leftPositionCommand);
+        // m_chooser.addOption("Middle Position", m_middlePositionCommand);
+        // tab.add(m_chooser);
         //Prabhu Initialize Drive system to forward facing
-        m_drivetrainSubsystem.drive(
-        ChassisSpeeds.fromFieldRelativeSpeeds(
-        0,
-        0,
-        0,
-        new Rotation2d()
-        ));
-        //Prabhu initialize Gyroscope to 0 on start
-        m_drivetrainSubsystem.zeroGyroscope();
+        // m_drivetrainSubsystem.drive(
+        // ChassisSpeeds.fromFieldRelativeSpeeds(
+        // 0,
+        // 0,
+        // 0,
+        // new Rotation2d()
+        // ));
+        // //Prabhu initialize Gyroscope to 0 on start
+        // m_drivetrainSubsystem.zeroGyroscope();
         //m_drivetrainSubsystem.zeroRoll();
         
-        m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(
-        m_drivetrainSubsystem,
-        () -> -modifyAxis(m_controller.getLeftY()) * 
-        DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-        () -> -modifyAxis(m_controller.getLeftX()) * 
-        DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-        () -> -modifyAxis(m_controller.getRightX()) * 
-        DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND
-        ));
+        // m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(
+        // m_drivetrainSubsystem,
+        // () -> -modifyAxis(m_controller.getLeftY()) * 
+        // DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+        // () -> -modifyAxis(m_controller.getLeftX()) * 
+        // DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+        // () -> -modifyAxis(m_controller.getRightX()) * 
+        // DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND
+        // ));
         
         // Configure the button bindings
         configureButtonBindings();
@@ -88,19 +95,23 @@ SendableChooser<Command> m_chooser = new SendableChooser<>();
             */
             private void configureButtonBindings() {
                 // First button when hit y button runs autonomous Command(Add what it does here)
-                m_subcontroller.y().onTrue(getAutonomousCommand());
-                m_subcontroller.povDown().onTrue(Commands.runOnce(() -> m_drivetrainSubsystem.zeroGyroscope(), m_drivetrainSubsystem));
+                // m_subcontroller.y().onTrue(getAutonomousCommand());
+                // m_subcontroller.povDown().onTrue(Commands.runOnce(() -> m_drivetrainSubsystem.zeroGyroscope(), m_drivetrainSubsystem));
 
-                // Button mappings for arm positions for scoring
-                m_subcontroller.x().onTrue(Commands.runOnce(() -> m_armSubsystem.setArmPosition(Position.coneHigh), m_armSubsystem));
-                m_subcontroller.a().onTrue(Commands.runOnce(() -> m_armSubsystem.setArmPosition(Position.coneLow), m_armSubsystem));
-                m_subcontroller.b().onTrue(Commands.runOnce(() -> m_armSubsystem.setArmPosition(Position.ground), m_armSubsystem));
-                m_subcontroller.leftBumper().onTrue(Commands.runOnce(() -> m_armSubsystem.lowerArmPosition(), m_armSubsystem));
-                m_subcontroller.rightBumper().onTrue(Commands.runOnce(() -> m_armSubsystem.raiseArmPosition(), m_armSubsystem));
-                // Joystick Control for arm bindings
-                m_subcontroller.axisGreaterThan(XboxController.Axis.kLeftY.value, m_armSubsystem.DEADBAND).onTrue(new ArmSpeedCommand(() -> m_subcontroller.getLeftY(), m_armSubsystem));
-                m_subcontroller.axisLessThan(XboxController.Axis.kLeftY.value, m_armSubsystem.DEADBAND).onTrue(new ArmSpeedCommand(() -> m_subcontroller.getLeftY(), m_armSubsystem));
-                
+                // // Button mappings for arm positions for scoring
+                // m_subcontroller.x().onTrue(Commands.runOnce(() -> m_armSubsystem.setArmPosition(Position.coneHigh), m_armSubsystem));
+                // m_subcontroller.a().onTrue(Commands.runOnce(() -> m_armSubsystem.setArmPosition(Position.coneLow), m_armSubsystem));
+                // m_subcontroller.b().onTrue(Commands.runOnce(() -> m_armSubsystem.setArmPosition(Position.ground), m_armSubsystem));
+                // m_subcontroller.leftBumper().onTrue(Commands.runOnce(() -> m_armSubsystem.lowerArmPosition(), m_armSubsystem));
+                // m_subcontroller.rightBumper().onTrue(Commands.runOnce(() -> m_armSubsystem.raiseArmPosition(), m_armSubsystem));
+                // // Joystick Control for arm bindings
+                // m_subcontroller.axisGreaterThan(XboxController.Axis.kLeftY.value, m_armSubsystem.DEADBAND).onTrue(new ArmSpeedCommand(() -> m_subcontroller.getLeftY(), m_armSubsystem));
+                // m_subcontroller.axisLessThan(XboxController.Axis.kLeftY.value, m_armSubsystem.DEADBAND).onTrue(new ArmSpeedCommand(() -> m_subcontroller.getLeftY(), m_armSubsystem));
+                m_controller.axisGreaterThan(XboxController.Axis.kRightTrigger.value, 0.15).onTrue(new ClawSpeedCommand(() -> m_controller.getRightTriggerAxis(), m_clawSubsystem));
+                m_controller.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, 0.8).onTrue(Commands.runOnce(() -> m_clawSubsystem.setClawPosition(Object.empty)));
+                m_controller.axisGreaterThan(XboxController.Axis.kLeftY.value, m_clawSubsystem.DEADBAND).onTrue(new ClawSpeedCommand(() -> m_controller.getLeftY(), m_clawSubsystem));
+                m_controller.axisLessThan(XboxController.Axis.kLeftY.value, -m_clawSubsystem.DEADBAND).onTrue(new ClawSpeedCommand(() -> m_controller.getLeftY(), m_clawSubsystem));
+
             }
             
             /**
@@ -108,13 +119,13 @@ SendableChooser<Command> m_chooser = new SendableChooser<>();
             *
             * @return the command to run in autonomous
             */
-            public Command getAutonomousCommand( ){
-                // An ExampleCommand will run in autonomous
-                //return new InstantCommand();
-               // return new PlatformDockPidCommand_Pitch(m_drivetrainSubsystem);
-               m_drivetrainSubsystem.drive ( new ChassisSpeeds(0, 0, 0));
-               return new AutonomousDistance(m_drivetrainSubsystem);
-            }
+            // public Command getAutonomousCommand( ){
+            //     // An ExampleCommand will run in autonomous
+            //     //return new InstantCommand();
+            //    // return new PlatformDockPidCommand_Pitch(m_drivetrainSubsystem);
+            // //    m_drivetrainSubsystem.drive ( new ChassisSpeeds(0, 0, 0));
+            // //    return new AutonomousDistance(m_drivetrainSubsystem);
+            // }
             
             private static double deadband(double value, double deadband) {
                 if (Math.abs(value) > deadband) {
