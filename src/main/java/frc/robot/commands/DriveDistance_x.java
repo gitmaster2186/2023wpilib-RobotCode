@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DrivetrainSubsystem;
 
@@ -14,6 +15,7 @@ public class DriveDistance_x extends CommandBase {
   private final double m_distance;
   private final double m_speed;
   private double start_pos_x=0.0;
+  int dis_fin=0;
   /**
    * Creates a new DriveDistance. This command will drive your your robot for a desired distance at
    * a desired speed.
@@ -35,15 +37,18 @@ public class DriveDistance_x extends CommandBase {
     
     m_drive.drive ( new ChassisSpeeds(0, 0, 0));
     // m_drive.zeroGyroscope();
-   m_drive.SwerveDriveOdomertyInitialize();
+//   m_drive.SwerveDriveOdomertyInitialize();
    start_pos_x=m_drive.getCurrentPose().getX();
    System.out.println("start_pos_x");
    System.out.println(start_pos_x);
+   dis_fin=0;
+   SmartDashboard.putNumber("drivex",dis_fin);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    
     m_drive.drive(new ChassisSpeeds(m_speed,0,0));
   }
 
@@ -57,7 +62,10 @@ public class DriveDistance_x extends CommandBase {
   @Override
   public boolean isFinished() {
     // Compare distance travelled from start to desired distance
+    dis_fin=dis_fin+1;
+    SmartDashboard.putNumber("drivex",dis_fin);
     return Math.abs(m_drive.getCurrentPose().getX()-start_pos_x) >= m_distance;
+    
    //return false;
   }
 }

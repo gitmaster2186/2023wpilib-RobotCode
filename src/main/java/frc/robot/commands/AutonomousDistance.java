@@ -16,14 +16,15 @@ public class AutonomousDistance extends SequentialCommandGroup {
    * @param drivetrain The drivetrain subsystem on which this command will run
    */
   public AutonomousDistance(DrivetrainSubsystem drivetrainsubsystem) {
+    //drivetrainsubsystem.SwerveDriveOdomertyInitialize();
     addCommands(
-      new DriveDistance_x(2, 0.5, drivetrainsubsystem),
-     new DriveDistance_y(2, 0.5, drivetrainsubsystem),
-     // new PlatformDockPidCommand_Pitch(drivetrainsubsystem)
-      new TurnDegrees(3, 90, drivetrainsubsystem),
-       new DriveDistance_x(-2, 0.5, drivetrainsubsystem),
-     new DriveDistance_y(-2, 0.5, drivetrainsubsystem),
-       new TurnDegrees(3, -90, drivetrainsubsystem)
+     // new DriveDistance_x(2, 0.6, drivetrainsubsystem),
+    // new DriveDistance_y(2, 0.5, drivetrainsubsystem)
+      new PlatformDockPidCommand_Pitch(drivetrainsubsystem)
+    //new TurnDegrees(3, 90,1, drivetrainsubsystem)
+     // new DriveDistance_x(-2, 2, drivetrainsubsystem)
+     //new DriveDistance_y(-2, 0.5, drivetrainsubsystem)
+    //new TurnDegrees(3, 90,-1, drivetrainsubsystem)
         );
   }
 }

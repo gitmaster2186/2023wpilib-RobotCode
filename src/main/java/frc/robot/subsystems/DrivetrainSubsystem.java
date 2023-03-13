@@ -179,6 +179,7 @@ public static final double MAX_VELOCITY_METERS_PER_SECOND = 4000 / 60.0 *
     m_odometry = new SwerveDriveOdometry(
         m_kinematics, getGyroscopeRotation(),
         getModulePositions()); 
+        SwerveDriveOdomertyInitialize();
   }
 
   /**
@@ -274,12 +275,12 @@ public static final double MAX_VELOCITY_METERS_PER_SECOND = 4000 / 60.0 *
     m_backRightModule.set(states[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[3].angle.getRadians());
     
     m_pos=m_odometry.update(getGyroscopeRotation(), getModulePositions() );
-    SmartDashboard.putString("Current Pose at Drive Train" ,m_pos.toString());
+    //SmartDashboard.putString("Current Pose at Drive Train" ,m_pos.toString());
 
-    SmartDashboard.putNumber("Current Pose X at Drive Train" ,m_pos.getX());
-    SmartDashboard.putNumber("Current Pose Y at Drive Train" ,m_pos.getY());
-    SmartDashboard.putNumber("Current Degress at Drive Train" ,m_pos.getRotation().getDegrees());
-    SmartDashboard.putNumber("Current Rotations at Drive Train" ,m_pos.getRotation().getRotations());
+//     SmartDashboard.putNumber("Current Pose X at Drive Train" ,m_pos.getX());
+//     SmartDashboard.putNumber("Current Pose Y at Drive Train" ,m_pos.getY());
+//     SmartDashboard.putNumber("Current Degress at Drive Train" ,m_pos.getRotation().getDegrees());
+//     SmartDashboard.putNumber("Current Rotations at Drive Train" ,m_pos.getRotation().getRotations());
   }
 
   

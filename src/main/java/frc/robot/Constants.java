@@ -25,7 +25,7 @@ public final class Constants {
      * Should be measured from center to center.
      */
 
-    public static final double kP = 0.03;
+    public static final double kP = 0.05;
     public static final double kI = 0.0;
     public static final double kD = 0.01;
     
@@ -61,5 +61,5 @@ public final class Constants {
     public static final double SPEED_SCALE_FACTOR = 0;
 
       // Prabhu - Max voltage changed from 12 to 2
-    public static double MAX_Voltage=2;
+    public static double MAX_Voltage=3;
 }

@@ -35,7 +35,7 @@ public class DriveDistance_y extends CommandBase {
     
     m_drive.drive ( new ChassisSpeeds(0, 0, 0));
     // m_drive.zeroGyroscope();
-   m_drive.SwerveDriveOdomertyInitialize();
+   //m_drive.SwerveDriveOdomertyInitialize();
    start_pos_y=m_drive.getCurrentPose().getY();
    System.out.println("start_pos_y");
    System.out.println(start_pos_y);
@@ -57,7 +57,7 @@ public class DriveDistance_y extends CommandBase {
   @Override
   public boolean isFinished() {
     // Compare distance travelled from start to desired distance
-    return Math.abs(m_drive.getCurrentPose().getY()-start_pos_y) >= m_distance;
+    return Math.abs(m_drive.getCurrentPose().getY() - start_pos_y) >= m_distance;
    //return false;
   }
 }

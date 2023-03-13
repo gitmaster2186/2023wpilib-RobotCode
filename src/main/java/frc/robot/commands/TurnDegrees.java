@@ -13,6 +13,7 @@ public class TurnDegrees extends CommandBase {
   private final DrivetrainSubsystem m_drive;
   private final double m_degrees;
   private final double m_speed;
+  private int m_direction=1;
 private double m_start_degree=0;
   /**
    * Creates a new TurnDegrees. This command will turn your robot for a desired rotation (in
@@ -22,10 +23,11 @@ private double m_start_degree=0;
    * @param degrees Degrees to turn. Leverages encoders to compare distance.
    * @param drive The drive subsystem on which this command will run
    */
-  public TurnDegrees(double speed, double degrees, DrivetrainSubsystem drive) {
+  public TurnDegrees(double speed, double degrees, int direction, DrivetrainSubsystem drive) {
     m_degrees = degrees;
     m_speed = speed;
     m_drive = drive;
+    m_direction=direction;
     addRequirements(drive);
   }
 
@@ -33,10 +35,10 @@ private double m_start_degree=0;
   @Override
   public void initialize() {
     // Set motors to stop, read encoder values for starting point
-    m_drive.drive( new ChassisSpeeds());
+    m_drive.drive( new ChassisSpeeds(0,0,0));
     // m_drive.zeroGyroscope();
-    m_drive.SwerveDriveOdomertyInitialize();
-    m_start_degree=m_drive.getCurrentPose().getRotation().getDegrees();
+   // m_drive.SwerveDriveOdomertyInitialize();
+    //m_start_degree=m_drive.getCurrentPose().getRotation().getDegrees();
   System.out.print(m_start_degree);
   }
 
@@ -56,7 +58,7 @@ private double m_start_degree=0;
   @Override
   public boolean isFinished() {
     
-   return m_drive.getCurrentPose().getRotation().getDegrees() -m_degrees>=0.001;
+   return Math.abs( m_drive.getCurrentPose().getRotation().getDegrees() -m_degrees)>=0.001;
    //return false;
   }
 

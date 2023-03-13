@@ -17,11 +17,12 @@ public class AutonomousTime extends SequentialCommandGroup {
    * @param drivetrain The drive subsystem on which this command will run
    */
   public AutonomousTime(DrivetrainSubsystem drivetrainsubsystem) {
+    //drivetrainsubsystem.SwerveDriveOdomertyInitialize();
     addCommands(
         new DriveTime_x(2, 2.0, drivetrainsubsystem),
-         new TurnDegrees(2, 90, drivetrainsubsystem),
+         new TurnDegrees(2, 90,1, drivetrainsubsystem),
          new DriveTime_x(2, 2.0, drivetrainsubsystem),
-         new TurnDegrees(2, -90, drivetrainsubsystem)
+         new TurnDegrees(2, 90, -1,drivetrainsubsystem)
         );
   }
 }

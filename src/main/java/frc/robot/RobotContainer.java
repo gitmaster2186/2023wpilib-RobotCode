@@ -40,7 +40,7 @@ public class RobotContainer {
     //Prabhu initialize Gyroscope to 0 on start
     m_drivetrainSubsystem.zeroGyroscope();
     //m_drivetrainSubsystem.zeroRoll();
-
+    m_drivetrainSubsystem.SwerveDriveOdomertyInitialize();
     m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(
               m_drivetrainSubsystem,
           () -> -modifyAxis(m_controller.getLeftY()) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
@@ -64,7 +64,7 @@ public class RobotContainer {
     new Button(m_controller::getAButtonPressed)
             // No requirements because we don't need to interrupt anything
             .whenPressed(m_drivetrainSubsystem::zeroGyroscope);
-            SmartDashboard.putString("Gyro Reset","GyroReset");        
+       //    SmartDashboard.putString("Gyro Reset","GyroReset");        
   }
 
   /**
