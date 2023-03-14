@@ -20,7 +20,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 public class ArmSubsystem extends SubsystemBase 
 {
     //declare subsystem variables
-    private static final int ARM_MOTOR_ID = 8;
+    private static final int ARM_MOTOR_ID = Constants.ARM_MOTOR_ID;
     public static CANSparkMax m_armMotor;
     private SparkMaxPIDController m_armPIDController;
     private RelativeEncoder m_armEncoder;
