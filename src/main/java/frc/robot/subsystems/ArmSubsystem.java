@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -20,31 +21,34 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 public class ArmSubsystem extends SubsystemBase 
 {
     //declare subsystem variables
-    private static final int ARM_MOTOR_ID = 8;
+    private static final int ARM_MOTOR_ID = Constants.ARM_MOTOR_ID;
     public static CANSparkMax m_armMotor;
     private SparkMaxPIDController m_armPIDController;
     private RelativeEncoder m_armEncoder;
-    private double currentRotation;
     private Position currentPosition = Position.ground;
+    private double[] rotationMap = {-10, -30, -50, -70, -80}; //move to constants eventually
+    private double currentRotation = 0;
+    private double MAX_VOLTAGE = 7;
+    //FIXME Change these values when needed
+    // 0.3 is the max speed that it can accelerate at any given moment. 
 
-    private SparkMaxLimitSwitch m_forwardLimit;
-    private SparkMaxLimitSwitch m_reverseLimit;
-
+    //limit switch MAX (highest position): -89.2
+    //limit switch MIN (lowest position): 1.8
 
     //create the roation map
-    private double[] rotationMap = {-10, -20, -50, -60, -70}; //move to constants eventually
-
     //create limit configuration variables
     public final double DEADBAND = 0.1;
-    private boolean isLimitSwitchEnabled = false;
-    private boolean isSoftLimitEnabled = true;
-    private float FORWARD_SOFT_LIMIT = 1;
-    private float REVERSE_SOFT_LIMIT = -89;
+    private boolean isLimitSwitchEnabled = true;
+    private boolean isSoftLimitEnabled = true; //change this one 
+    private float FORWARD_SOFT_LIMIT = -0.5f;
+    private float REVERSE_SOFT_LIMIT = -97;
+    private SparkMaxLimitSwitch m_forwardLimit;
+    private SparkMaxLimitSwitch m_reverseLimit;
     private final int PID_SLOT_ID = 0;
-
         
     //PID values from documentation here https://github.com/REVrobotics/SPARK-MAX-Examples
-    private double kP = 0.45, kI = 1e-5, kD = 1, kIz = 0, kFF = 0, kMaxOutput = 0.35, kMinOutput = -0.35;
+    private double kP = 0.45, kI = 1e-5, kD = 1, kIz = 0, kFF = 0, 
+    kMaxOutput = 0.6, kMinOutput = -0.6; //PID max speeds
     
     public ArmSubsystem() {
         m_armMotor = new CANSparkMax(ARM_MOTOR_ID, MotorType.kBrushless);
@@ -65,8 +69,8 @@ public class ArmSubsystem extends SubsystemBase
 
 
 
-        m_forwardLimit = m_armMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
-        m_reverseLimit = m_armMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
+        m_forwardLimit = m_armMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
+        m_reverseLimit = m_armMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
         m_forwardLimit.enableLimitSwitch(isLimitSwitchEnabled);
         m_reverseLimit.enableLimitSwitch(isLimitSwitchEnabled);
 
@@ -81,9 +85,7 @@ public class ArmSubsystem extends SubsystemBase
 
         SmartDashboard.putBoolean("Soft Limit Enabled", isSoftLimitEnabled);
         SmartDashboard.putNumber("Forward Soft Limit", m_armMotor.getSoftLimit(CANSparkMax.SoftLimitDirection.kForward));
-        SmartDashboard.putNumber("Reverse Soft Limit", m_armMotor.getSoftLimit(CANSparkMax.SoftLimitDirection.kReverse));
-
-        
+        SmartDashboard.putNumber("Reverse Soft Limit", m_armMotor.getSoftLimit(CANSparkMax.SoftLimitDirection.kReverse));        
         
         m_armPIDController.setP(kP);
         m_armPIDController.setI(kI);
@@ -163,6 +165,19 @@ public class ArmSubsystem extends SubsystemBase
             m_armMotor.setSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, reverseSoftLimit);
             REVERSE_SOFT_LIMIT = reverseSoftLimit;
         }
+        //update these
+        //m_armPIDController.setSmartMotionMaxAccel(maxAccel, PID_SLOT_ID);
+        //m_armPIDController.setSmartMotionMaxVelocity(maxVelocity, PID_SLOT_ID);
+        // double newMaxAccel = SmartDashboard.getNumber("Max Accel", maxAccel);
+        // double newMaxVelocity = SmartDashboard.getNumber("Max Velocity", maxVelocity);
+        // if (newMaxAccel != maxAccel) {
+        //     m_armPIDController.setSmartMotionMaxAccel(newMaxAccel, PID_SLOT_ID);
+        //     maxAccel = newMaxAccel;
+        // }
+        // if (newMaxVelocity != maxVelocity) {
+        //     m_armPIDController.setSmartMotionMaxVelocity(newMaxVelocity, PID_SLOT_ID);
+        //     maxVelocity = newMaxVelocity;
+        // }
         
         if((p != kP)) { m_armPIDController.setP(p); kP = p; }
         if((i != kI)) { m_armPIDController.setI(i); kI = i; }
@@ -202,7 +217,7 @@ public class ArmSubsystem extends SubsystemBase
     
     public void setArmSpeed(double joystickInput) {
         //FIXME add limit switches here or encoder max values
-        m_armPIDController.setReference(-joystickInput * Constants.MAX_Voltage, CANSparkMax.ControlType.kVoltage, PID_SLOT_ID);
+        m_armPIDController.setReference(joystickInput * MAX_VOLTAGE, CANSparkMax.ControlType.kVoltage, PID_SLOT_ID);
     }
     
     public enum Position{
