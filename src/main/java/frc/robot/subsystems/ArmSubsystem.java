@@ -28,12 +28,10 @@ public class ArmSubsystem extends SubsystemBase
     private Position currentPosition = Position.ground;
     private double[] rotationMap = {-10, -30, -50, -70, -80}; //move to constants eventually
     private double currentRotation = 0;
+    private double MAX_VOLTAGE = 7;
     //FIXME Change these values when needed
     // 0.3 is the max speed that it can accelerate at any given moment. 
-    public SlewRateLimiter joystickLimiter = new SlewRateLimiter(0.3);
 
-    private SparkMaxLimitSwitch m_forwardLimit;
-    private SparkMaxLimitSwitch m_reverseLimit;
     //limit switch MAX (highest position): -89.2
     //limit switch MIN (lowest position): 1.8
 
