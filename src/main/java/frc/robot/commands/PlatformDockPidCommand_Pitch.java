@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class PlatformDockPidCommand_Pitch extends PIDCommand {
-  private final static AHRS m_navx = new AHRS(SPI.Port.kMXP, (byte) 200); // NavX connected over MXP
+  
   private static double last_pitch=0.0;
   /** Creates a new PlatformDockPidCommand. */
   public PlatformDockPidCommand_Pitch(DrivetrainSubsystem m_drivetrainSubsystem) {
@@ -25,7 +25,7 @@ public class PlatformDockPidCommand_Pitch extends PIDCommand {
         // The contpitcher that the command will use
         new PIDController(Constants.kP,Constants.kI, Constants.kD),//P,I,D
         // This should return the measurement
-        () -> smoothpitch(m_navx.getPitch()),
+        () -> smoothpitch(m_drivetrainSubsystem.getPitch()),
         // This should return the setpoint (can also be a constant)
         () -> 0,
         // This uses the output
@@ -69,6 +69,7 @@ public class PlatformDockPidCommand_Pitch extends PIDCommand {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    
     return false;
   }
 }

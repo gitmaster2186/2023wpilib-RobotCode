@@ -227,6 +227,9 @@ public static final double MAX_VELOCITY_METERS_PER_SECOND = 4000 / 60.0 *
     m_chassisSpeeds = chassisSpeeds;
   }
 
+  public void drive_yaw(double pid_output){
+        
+  }
   
   public void drive_pid_x(double pid_output) {
         //System.out.println("getRoll()");
@@ -269,10 +272,6 @@ public static final double MAX_VELOCITY_METERS_PER_SECOND = 4000 / 60.0 *
     m_backLeftModule.set(states[2].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[2].angle.getRadians());
     m_backRightModule.set(states[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[3].angle.getRadians());
 
-    m_frontLeftModule.set(states[0].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[0].angle.getRadians());
-    m_frontRightModule.set(states[1].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[1].angle.getRadians());
-    m_backLeftModule.set(states[2].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[2].angle.getRadians());
-    m_backRightModule.set(states[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[3].angle.getRadians());
     
     m_pos=m_odometry.update(getGyroscopeRotation(), getModulePositions() );
     //SmartDashboard.putString("Current Pose at Drive Train" ,m_pos.toString());
@@ -336,5 +335,9 @@ public void zeroRoll() {
 
 public void drive_parameters(double x_speed, double y_speed, double final_angle) {
         m_chassisSpeeds= new ChassisSpeeds(DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND*x_speed,DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND*y_speed,0);
+}
+
+public float getPitch() {
+        return m_navx.getPitch();
 }
 }
