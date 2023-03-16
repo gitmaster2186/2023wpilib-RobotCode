@@ -60,6 +60,10 @@ public final class Constants {
     public static final double MINIMUM_DISPLACEMENT = 0;
     public static final double SPEED_SCALE_FACTOR = 0;
 
+    public static final int ARM_MOTOR_ID = 15; //sahil- random unused value, maybe should be different?
+    public static final int CLAW_MOTOR_ID = 16; //sahil- random unused value, maybe should be different?
+
+
       // Prabhu - Max voltage changed from 12 to 2
     public static double MAX_Voltage=3;
 }

@@ -10,16 +10,26 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Button;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.commands.ArmSpeedCommand;
 import frc.robot.commands.AutonomousDistance;
+import frc.robot.commands.ClawSpeedCommand;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.PlatformDockPidCommand_Pitch;
+import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
 
 public class RobotContainer {
   private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
+  final ArmSubsystem m_armSubsystem = new ArmSubsystem();
+  final ClawSubsystem m_clawSubsystem = new ClawSubsystem();
 
-  private final XboxController m_controller = new XboxController(0);
+
+  final CommandXboxController m_controller = new CommandXboxController(0);
+  final CommandXboxController m_subcontroller = new CommandXboxController(1);
 
   public RobotContainer() {
     // Set up the default command for the drivetrain.
@@ -61,10 +71,19 @@ public class RobotContainer {
   private void configureButtonBindings() {
     SmartDashboard.putString("Back button pressed","Back button pressed");
     // Back button zeros the gyroscope
-    new Button(m_controller::getAButtonPressed)
-            // No requirements because we don't need to interrupt anything
-            .whenPressed(m_drivetrainSubsystem::zeroGyroscope);
-       //    SmartDashboard.putString("Gyro Reset","GyroReset");        
+    // new Button(m_controller::getAButtonPressed)
+    //         // No requirements because we don't need to interrupt anything
+    //         .whenPressed(m_drivetrainSubsystem::zeroGyroscope);
+    //    //    SmartDashboard.putString("Gyro Reset","GyroReset");   
+    m_controller.a().onTrue(Commands.runOnce(() -> m_drivetrainSubsystem.zeroGyroscope()));
+    m_subcontroller.leftBumper().onTrue(Commands.runOnce(() -> m_armSubsystem.lowerArmPosition(), m_armSubsystem));
+    m_subcontroller.rightBumper().onTrue(Commands.runOnce(() -> m_armSubsystem.raiseArmPosition(), m_armSubsystem));
+    m_subcontroller.axisGreaterThan(XboxController.Axis.kLeftY.value,  m_armSubsystem.DEADBAND).onTrue(new ArmSpeedCommand(() -> m_subcontroller.getLeftY(), m_armSubsystem));
+    m_subcontroller.axisLessThan(XboxController.Axis.kLeftY.value, -m_armSubsystem.DEADBAND).onTrue(new ArmSpeedCommand(() -> m_subcontroller.getLeftY(), m_armSubsystem));
+   
+   m_controller.axisGreaterThan(XboxController.Axis.kRightTrigger.value, m_clawSubsystem.DEADBAND).onTrue(new ClawSpeedCommand(() -> m_controller.getRightTriggerAxis(), m_clawSubsystem));
+   m_controller.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, m_clawSubsystem.DEADBAND).onTrue(new ClawSpeedCommand(() -> -m_controller.getLeftTriggerAxis(), m_clawSubsystem));
+
   }
 
   /**
