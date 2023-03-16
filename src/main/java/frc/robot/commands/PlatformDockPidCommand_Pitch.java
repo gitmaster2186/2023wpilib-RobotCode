@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class PlatformDockPidCommand_Pitch extends PIDCommand {
-  
+  DrivetrainSubsystem m_drivetrainSubsystem_local;
   private static double last_pitch=0.0;
   /** Creates a new PlatformDockPidCommand. */
   public PlatformDockPidCommand_Pitch(DrivetrainSubsystem m_drivetrainSubsystem) {
@@ -38,6 +38,7 @@ public class PlatformDockPidCommand_Pitch extends PIDCommand {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(m_drivetrainSubsystem);
     // Configure additional PID options by calling `getContpitcher` here.
+    m_drivetrainSubsystem_local=m_drivetrainSubsystem;
     
   }
  
@@ -69,6 +70,10 @@ public class PlatformDockPidCommand_Pitch extends PIDCommand {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+       //FIXME Need to end on some button here
+   SmartDashboard.putNumber("getRoll",m_drivetrainSubsystem_local.getPitch() );
+   SmartDashboard.putNumber("getPitch",m_drivetrainSubsystem_local.getRoll() );
+   SmartDashboard.putNumber("getYaw",m_drivetrainSubsystem_local.getYaw() );
     
     return false;
   }
