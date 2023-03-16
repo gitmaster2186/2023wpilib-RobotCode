@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -37,6 +36,7 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     
     m_robotContainer = new RobotContainer();
+    
     // System.out.println("in Robo Init");
   }
 
@@ -47,7 +47,7 @@ public class Robot extends TimedRobot {
    * <p>This runs after the mode specific periodic functions, but before LiveWindow and
    * SmartDashboard integrated updating.
    */
-  private final AHRS m_navx = new AHRS(SPI.Port.kMXP, (byte) 200); // NavX connected over MXP
+
 
   @Override
   public void robotPeriodic() {
@@ -56,10 +56,7 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
-     //System.out.println("getRoll()");
-     SmartDashboard.putNumber("getRoll",m_navx.getPitch() );
-     SmartDashboard.putNumber("getPitch",m_navx.getRoll() );
-     SmartDashboard.putNumber("getYaw",m_navx.getYaw() );
+  
      
     // System.out.println("in Robo Periodic");
     
@@ -82,20 +79,24 @@ public class Robot extends TimedRobot {
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
-      System.out.println("in autonomous Init");
+      
     }
   }
 
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-
+  //  //FIXME Remove this code
+  //  SmartDashboard.putNumber("getRoll",m_navx.getPitch() );
+  //  SmartDashboard.putNumber("getPitch",m_navx.getRoll() );
+  //  SmartDashboard.putNumber("getYaw",m_navx.getYaw() );
     
-    // m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
-    // // schedule the autonomous command (example)
-    // if (m_autonomousCommand != null) {
-    //   m_autonomousCommand.schedule();
+    // schedule the autonomous command (example)
+    if (m_autonomousCommand != null) {
+      m_autonomousCommand.schedule();
+    }
     //   System.out.println("in autonomous Periodic");
     //}
   }
