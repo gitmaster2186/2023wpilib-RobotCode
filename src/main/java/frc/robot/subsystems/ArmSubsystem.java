@@ -4,7 +4,6 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -42,9 +41,12 @@ public class ArmSubsystem extends SubsystemBase
     private boolean isSoftLimitEnabled = true; //change this one 
     private float FORWARD_SOFT_LIMIT = -0.5f;
     private float REVERSE_SOFT_LIMIT = -97;
+    private double MAX_ACCELERATION = 15;
     private SparkMaxLimitSwitch m_forwardLimit;
     private SparkMaxLimitSwitch m_reverseLimit;
     private final int PID_SLOT_ID = 0;
+    
+    //private double ARM_MAX_VOLTAGE = 4.0;
         
     //PID values from documentation here https://github.com/REVrobotics/SPARK-MAX-Examples
     private double kP = 0.45, kI = 1e-5, kD = 1, kIz = 0, kFF = 0, 
@@ -58,11 +60,15 @@ public class ArmSubsystem extends SubsystemBase
         m_armEncoder = m_armMotor.getEncoder();
         //m_armMotor.setSmartCurrentLimit(int StallLimit, int FreeLimit); //already enabled by deaflt to 80A and 20A respectively. Test other new code before enabling this. 
 
+        // !!!SID!!! XXX - this will basically set our max speed!!!
+        //m_armMotor.enableVoltageCompensation(ARM_MAX_VOLTAGE);
+
+
         currentRotation = m_armEncoder.getPosition();
         //m_armPIDController.setSmartMotionMaxAccel(maxAccel, PID_SLOT_ID);
         //m_armPIDController.setSmartMotionMaxVelocity(maxVelocity, PID_SLOT_ID);
 
-        SmartDashboard.putNumber("current Rotation", currentRotation);
+        //SmartDashboard.putNumber("current Rotation", currentRotation);
         // SmartDashboard.putNumber("Max Acceleration", maxAccel);
         // SmartDashboard.putNumber("Max Velocity", maxVelocity);
 
@@ -74,7 +80,7 @@ public class ArmSubsystem extends SubsystemBase
         m_forwardLimit.enableLimitSwitch(isLimitSwitchEnabled);
         m_reverseLimit.enableLimitSwitch(isLimitSwitchEnabled);
 
-        SmartDashboard.putBoolean("Limit Switch Enabled", isLimitSwitchEnabled);
+        //SmartDashboard.putBoolean("Limit Switch Enabled", isLimitSwitchEnabled);
 
 
 
@@ -82,10 +88,11 @@ public class ArmSubsystem extends SubsystemBase
         m_armMotor.enableSoftLimit(SoftLimitDirection.kReverse, isSoftLimitEnabled);
         m_armMotor.setSoftLimit(CANSparkMax.SoftLimitDirection.kForward, FORWARD_SOFT_LIMIT);
         m_armMotor.setSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, REVERSE_SOFT_LIMIT);
+        m_armPIDController.setSmartMotionMaxAccel(ARM_MOTOR_ID, PID_SLOT_ID);
 
-        SmartDashboard.putBoolean("Soft Limit Enabled", isSoftLimitEnabled);
-        SmartDashboard.putNumber("Forward Soft Limit", m_armMotor.getSoftLimit(CANSparkMax.SoftLimitDirection.kForward));
-        SmartDashboard.putNumber("Reverse Soft Limit", m_armMotor.getSoftLimit(CANSparkMax.SoftLimitDirection.kReverse));        
+        // SmartDashboard.putBoolean("Soft Limit Enabled", isSoftLimitEnabled);
+        // SmartDashboard.putNumber("Forward Soft Limit", m_armMotor.getSoftLimit(CANSparkMax.SoftLimitDirection.kForward));
+        // SmartDashboard.putNumber("Reverse Soft Limit", m_armMotor.getSoftLimit(CANSparkMax.SoftLimitDirection.kReverse));        
         
         m_armPIDController.setP(kP);
         m_armPIDController.setI(kI);
@@ -96,22 +103,22 @@ public class ArmSubsystem extends SubsystemBase
         m_armPIDController.setPositionPIDWrappingMinInput(0.1);
         m_armPIDController.setPositionPIDWrappingMaxInput(0.9);
 
-        SmartDashboard.putNumber("P Gain", kP);
-        SmartDashboard.putNumber("I Gain", kI);
-        SmartDashboard.putNumber("D Gain", kD);
-        SmartDashboard.putNumber("I Zone", kIz);
-        SmartDashboard.putNumber("Feed Forward", kFF);
-        SmartDashboard.putNumber("Max Output", kMaxOutput);
-        SmartDashboard.putNumber("Min Output", kMinOutput);
+        // SmartDashboard.putNumber("P Gain", kP);
+        // SmartDashboard.putNumber("I Gain", kI);
+        // SmartDashboard.putNumber("D Gain", kD);
+        // SmartDashboard.putNumber("I Zone", kIz);
+        // SmartDashboard.putNumber("Feed Forward", kFF);
+        // SmartDashboard.putNumber("Max Output", kMaxOutput);
+        // SmartDashboard.putNumber("Min Output", kMinOutput);
 
 
 
         
         //SmartDashboard.putNumberArray("Rotation Map", rotationMap);
-        for (int r = 0; r < rotationMap.length; r++) {
-            SmartDashboard.putNumber("Rotation Map of " + r, rotationMap[r]);
-        }
-        SmartDashboard.putString("current Position", currentPosition.name());
+        // for (int r = 0; r < rotationMap.length; r++) {
+        //     SmartDashboard.putNumber("Rotation Map of " + r, rotationMap[r]);
+        // }
+        // SmartDashboard.putString("current Position", currentPosition.name());
 
         /* 
         use SmartDashboard tabs
@@ -135,62 +142,62 @@ public class ArmSubsystem extends SubsystemBase
     public void periodic() {
         //uncomment this and previous block to set values with smart dashboard for testing
         
-        double p = SmartDashboard.getNumber("P Gain", kP);
-        double i = SmartDashboard.getNumber("I Gain", kI);
-        double d = SmartDashboard.getNumber("D Gain", kD);
-        double iz = SmartDashboard.getNumber("I Zone", kIz);
-        double ff = SmartDashboard.getNumber("Feed Forward", kFF);
-        double max = SmartDashboard.getNumber("Max Output", kMaxOutput);
-        double min = SmartDashboard.getNumber("Min Output", kMinOutput);
+        // double p = SmartDashboard.getNumber("P Gain", kP);
+        // double i = SmartDashboard.getNumber("I Gain", kI);
+        // double d = SmartDashboard.getNumber("D Gain", kD);
+        // double iz = SmartDashboard.getNumber("I Zone", kIz);
+        // double ff = SmartDashboard.getNumber("Feed Forward", kFF);
+        // double max = SmartDashboard.getNumber("Max Output", kMaxOutput);
+        // double min = SmartDashboard.getNumber("Min Output", kMinOutput);
         
         
-        SmartDashboard.putNumber("current Rotation", m_armEncoder.getPosition());
-        SmartDashboard.putString("current Position", currentPosition.name());
-        SmartDashboard.putNumber("Set Point", rotationMap[currentPosition.position]);
+        // SmartDashboard.putNumber("current Rotation", m_armEncoder.getPosition());
+        // SmartDashboard.putString("current Position", currentPosition.name());
+        // SmartDashboard.putNumber("Set Point", rotationMap[currentPosition.position]);
 
 
-        SmartDashboard.putBoolean("Forward Limit Switch", m_forwardLimit.isPressed());
-        SmartDashboard.putBoolean("Reverse Limit Switch", m_reverseLimit.isPressed());
+        // SmartDashboard.putBoolean("Forward Limit Switch", m_forwardLimit.isPressed());
+        // SmartDashboard.putBoolean("Reverse Limit Switch", m_reverseLimit.isPressed());
 
         
 
 
-        float forwardSoftLimit = (float) SmartDashboard.getNumber("Forward Soft Limit", FORWARD_SOFT_LIMIT);
-        float reverseSoftLimit = (float) SmartDashboard.getNumber("Reverse Soft Limit", REVERSE_SOFT_LIMIT);
-        if (forwardSoftLimit != FORWARD_SOFT_LIMIT) {
-            m_armMotor.setSoftLimit(CANSparkMax.SoftLimitDirection.kForward, forwardSoftLimit);
-            FORWARD_SOFT_LIMIT = forwardSoftLimit;
-        }
-        if (reverseSoftLimit != REVERSE_SOFT_LIMIT) {
-            m_armMotor.setSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, reverseSoftLimit);
-            REVERSE_SOFT_LIMIT = reverseSoftLimit;
-        }
-        //update these
-        //m_armPIDController.setSmartMotionMaxAccel(maxAccel, PID_SLOT_ID);
-        //m_armPIDController.setSmartMotionMaxVelocity(maxVelocity, PID_SLOT_ID);
-        // double newMaxAccel = SmartDashboard.getNumber("Max Accel", maxAccel);
-        // double newMaxVelocity = SmartDashboard.getNumber("Max Velocity", maxVelocity);
-        // if (newMaxAccel != maxAccel) {
-        //     m_armPIDController.setSmartMotionMaxAccel(newMaxAccel, PID_SLOT_ID);
-        //     maxAccel = newMaxAccel;
+        // float forwardSoftLimit = (float) SmartDashboard.getNumber("Forward Soft Limit", FORWARD_SOFT_LIMIT);
+        // float reverseSoftLimit = (float) SmartDashboard.getNumber("Reverse Soft Limit", REVERSE_SOFT_LIMIT);
+        // if (forwardSoftLimit != FORWARD_SOFT_LIMIT) {
+        //     m_armMotor.setSoftLimit(CANSparkMax.SoftLimitDirection.kForward, forwardSoftLimit);
+        //     FORWARD_SOFT_LIMIT = forwardSoftLimit;
         // }
-        // if (newMaxVelocity != maxVelocity) {
-        //     m_armPIDController.setSmartMotionMaxVelocity(newMaxVelocity, PID_SLOT_ID);
-        //     maxVelocity = newMaxVelocity;
+        // if (reverseSoftLimit != REVERSE_SOFT_LIMIT) {
+        //     m_armMotor.setSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, reverseSoftLimit);
+        //     REVERSE_SOFT_LIMIT = reverseSoftLimit;
         // }
+        // //update these
+        // //m_armPIDController.setSmartMotionMaxAccel(maxAccel, PID_SLOT_ID);
+        // //m_armPIDController.setSmartMotionMaxVelocity(maxVelocity, PID_SLOT_ID);
+        // // double newMaxAccel = SmartDashboard.getNumber("Max Accel", maxAccel);
+        // // double newMaxVelocity = SmartDashboard.getNumber("Max Velocity", maxVelocity);
+        // // if (newMaxAccel != maxAccel) {
+        // //     m_armPIDController.setSmartMotionMaxAccel(newMaxAccel, PID_SLOT_ID);
+        // //     maxAccel = newMaxAccel;
+        // // }
+        // // if (newMaxVelocity != maxVelocity) {
+        // //     m_armPIDController.setSmartMotionMaxVelocity(newMaxVelocity, PID_SLOT_ID);
+        // //     maxVelocity = newMaxVelocity;
+        // // }
         
-        if((p != kP)) { m_armPIDController.setP(p); kP = p; }
-        if((i != kI)) { m_armPIDController.setI(i); kI = i; }
-        if((d != kD)) { m_armPIDController.setD(d); kD = d; }
-        if((iz != kIz)) { m_armPIDController.setIZone(iz); kIz = iz; }
-        if((ff != kFF)) { m_armPIDController.setFF(ff); kFF = ff; }
-        if((max != kMaxOutput) || (min != kMinOutput)) { 
-            m_armPIDController.setOutputRange(min, max); 
-            kMinOutput = min; kMaxOutput = max; 
-        }
-        for (int r = 0; r < rotationMap.length; r++) {
-            rotationMap[r] = SmartDashboard.getNumber("Rotation Map of " + r, rotationMap[r]);
-        }
+        // if((p != kP)) { m_armPIDController.setP(p); kP = p; }
+        // if((i != kI)) { m_armPIDController.setI(i); kI = i; }
+        // if((d != kD)) { m_armPIDController.setD(d); kD = d; }
+        // if((iz != kIz)) { m_armPIDController.setIZone(iz); kIz = iz; }
+        // if((ff != kFF)) { m_armPIDController.setFF(ff); kFF = ff; }
+        // if((max != kMaxOutput) || (min != kMinOutput)) { 
+        //     m_armPIDController.setOutputRange(min, max); 
+        //     kMinOutput = min; kMaxOutput = max; 
+        // }
+        // for (int r = 0; r < rotationMap.length; r++) {
+        //     rotationMap[r] = SmartDashboard.getNumber("Rotation Map of " + r, rotationMap[r]);
+        // }
     }
     public void setArmPosition(Position toSet) {
         m_armPIDController.setReference(rotationMap[toSet.position], CANSparkMax.ControlType.kPosition, PID_SLOT_ID);

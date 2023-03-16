@@ -59,7 +59,7 @@ public final class Constants {
     public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(205.8); //Measure and set back right steer offset
     
     public static final int ARM_MOTOR_ID = 15; //sahil- random unused value, maybe should be different?
-    public static final int CLAW_MOTOR_ID = 20; //sahil- random unused value, maybe should be different?
+    public static final int CLAW_MOTOR_ID = 16; //sahil- random unused value, maybe should be different?
     public static final double armEncoderMax = 0;
     
 
@@ -68,6 +68,8 @@ public final class Constants {
     public static final double SPEED_SCALE_FACTOR = 0.01;
     public static final double minYSpeed = 0.000001;
     public static final double minXSpeed = -0.000001;
+    public static final double MIN_CLAW_INPUT =  0.09;
+    public static final double MAX_CLAW_SPEED = 0.1;
 
     // Prabhu - Max voltage changed from 12 to 2
     public static double MAX_Voltage=3;

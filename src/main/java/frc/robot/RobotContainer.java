@@ -16,10 +16,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
 
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.AutonomousDistance;
+import frc.robot.commands.ClawSpeedCommand;
 import frc.robot.commands.ArmSpeedCommand;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.DrivePositionCommand;
@@ -29,6 +31,7 @@ import frc.robot.commands.PlatformDockPidCommand_Pitch;
 public class RobotContainer {
     final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
     final ArmSubsystem m_armSubsystem = new ArmSubsystem();
+    final ClawSubsystem m_clawSubsystem = new ClawSubsystem();
 
     
     final CommandXboxController m_controller = new CommandXboxController(0);
@@ -87,14 +90,18 @@ SendableChooser<Command> m_chooser = new SendableChooser<>();
             * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
             */
             private void configureButtonBindings() {
-                m_subcontroller.y().onTrue(getAutonomousCommand());
-                m_subcontroller.povDown().onTrue(Commands.runOnce(() -> m_drivetrainSubsystem.zeroGyroscope(), m_drivetrainSubsystem));
+                // m_subcontroller.y().onTrue(getAutonomousCommand());
+                // m_subcontroller.povDown().onTrue(Commands.runOnce(() -> m_drivetrainSubsystem.zeroGyroscope(), m_drivetrainSubsystem));
 
-                m_subcontroller.leftBumper().onTrue(Commands.runOnce(() -> m_armSubsystem.lowerArmPosition(), m_armSubsystem));
-                m_subcontroller.rightBumper().onTrue(Commands.runOnce(() -> m_armSubsystem.raiseArmPosition(), m_armSubsystem));
-                m_subcontroller.axisGreaterThan(XboxController.Axis.kLeftY.value, m_armSubsystem.DEADBAND).onTrue(new ArmSpeedCommand(() -> m_subcontroller.getLeftY(), m_armSubsystem));
-                m_subcontroller.axisLessThan(XboxController.Axis.kLeftY.value, -m_armSubsystem.DEADBAND).onTrue(new ArmSpeedCommand(() -> m_subcontroller.getLeftY(), m_armSubsystem));
+                 m_subcontroller.leftBumper().onTrue(Commands.runOnce(() -> m_armSubsystem.lowerArmPosition(), m_armSubsystem));
+                 m_subcontroller.rightBumper().onTrue(Commands.runOnce(() -> m_armSubsystem.raiseArmPosition(), m_armSubsystem));
+                 m_subcontroller.axisGreaterThan(XboxController.Axis.kLeftY.value,  m_armSubsystem.DEADBAND).onTrue(new ArmSpeedCommand(() -> m_subcontroller.getLeftY(), m_armSubsystem));
+                 m_subcontroller.axisLessThan(   XboxController.Axis.kLeftY.value, -m_armSubsystem.DEADBAND).onTrue(new ArmSpeedCommand(() -> m_subcontroller.getLeftY(), m_armSubsystem));
                 
+                // !!!SID!!! - added 3/16/23
+                m_controller.axisGreaterThan(XboxController.Axis.kRightTrigger.value, m_clawSubsystem.DEADBAND).onTrue(new ClawSpeedCommand(() -> m_controller.getRightTriggerAxis(), m_clawSubsystem));
+                m_controller.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, m_clawSubsystem.DEADBAND).onTrue(new ClawSpeedCommand(() -> -m_controller.getLeftTriggerAxis(), m_clawSubsystem));
+
             }
             
             /**
