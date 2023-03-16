@@ -36,6 +36,7 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     
     m_robotContainer = new RobotContainer();
+    
     // System.out.println("in Robo Init");
   }
 
@@ -85,12 +86,17 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
+  //  //FIXME Remove this code
+  //  SmartDashboard.putNumber("getRoll",m_navx.getPitch() );
+  //  SmartDashboard.putNumber("getPitch",m_navx.getRoll() );
+  //  SmartDashboard.putNumber("getYaw",m_navx.getYaw() );
+    
+     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
-    // m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
-    // // schedule the autonomous command (example)
-    // if (m_autonomousCommand != null) {
-    //   m_autonomousCommand.schedule();
+    // schedule the autonomous command (example)
+    if (m_autonomousCommand != null) {
+      m_autonomousCommand.schedule();
+    }
     //   System.out.println("in autonomous Periodic");
     //}
   }

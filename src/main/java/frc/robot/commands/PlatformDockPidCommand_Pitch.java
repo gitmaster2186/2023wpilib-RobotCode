@@ -16,8 +16,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class PlatformDockPidCommand_Pitch extends PIDCommand {
+  public static AHRS m_navx = new AHRS(SPI.Port.kMXP, (byte) 200); // NavX connected over MXP
   DrivetrainSubsystem m_drivetrainSubsystem_local;
   private static double last_pitch=0.0;
+  private static int m_count_of_finishied=0;
+  private static int m_count_of_in_smooth=0;
   /** Creates a new PlatformDockPidCommand. */
   public PlatformDockPidCommand_Pitch(DrivetrainSubsystem m_drivetrainSubsystem) {
     
@@ -25,7 +28,7 @@ public class PlatformDockPidCommand_Pitch extends PIDCommand {
         // The contpitcher that the command will use
         new PIDController(Constants.kP,Constants.kI, Constants.kD),//P,I,D
         // This should return the measurement
-        () -> smoothpitch(m_drivetrainSubsystem.getPitch()),
+        () -> smoothpitch(m_navx.getPitch()),
         // This should return the setpoint (can also be a constant)
         () -> 0,
         // This uses the output
@@ -38,11 +41,13 @@ public class PlatformDockPidCommand_Pitch extends PIDCommand {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(m_drivetrainSubsystem);
     // Configure additional PID options by calling `getContpitcher` here.
-    m_drivetrainSubsystem_local=m_drivetrainSubsystem;
+  
     
   }
  
   private static double smoothpitch(float pitch) {
+    m_count_of_in_smooth=m_count_of_in_smooth+1;
+    SmartDashboard.putNumber("In smooth pitch", m_count_of_in_smooth);
     double calculatedpitch=pitch;
     SmartDashboard.putNumber("read pitch", pitch);
     if (Math.abs(pitch) < 2.5)
@@ -65,16 +70,14 @@ public class PlatformDockPidCommand_Pitch extends PIDCommand {
     }
     SmartDashboard.putNumber("set pitch", calculatedpitch);
     return calculatedpitch;
+    
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-       //FIXME Need to end on some button here
-   SmartDashboard.putNumber("getRoll",m_drivetrainSubsystem_local.getPitch() );
-   SmartDashboard.putNumber("getPitch",m_drivetrainSubsystem_local.getRoll() );
-   SmartDashboard.putNumber("getYaw",m_drivetrainSubsystem_local.getYaw() );
-    
+       SmartDashboard.putNumber("Autonomous Balance", m_count_of_finishied);
+       m_count_of_finishied=m_count_of_finishied+1;
     return false;
   }
 }
