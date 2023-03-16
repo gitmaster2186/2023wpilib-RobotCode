@@ -4,10 +4,14 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -17,6 +21,7 @@ import frc.robot.commands.ArmSpeedCommand;
 import frc.robot.commands.AutonomousDistance;
 import frc.robot.commands.ClawSpeedCommand;
 import frc.robot.commands.DefaultDriveCommand;
+import frc.robot.commands.DrivePositionCommand;
 import frc.robot.commands.PlatformDockPidCommand_Pitch;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
@@ -26,9 +31,18 @@ public class RobotContainer {
   private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
   final ArmSubsystem m_armSubsystem = new ArmSubsystem();
   final ClawSubsystem m_clawSubsystem = new ClawSubsystem();
+  
+  // Distance from grid to charge station: 
+  // Left and Right we will go straight forward past the community
+  // Center will be directly behind the charge station, so we will run our main auto
+  private final Command m_leftPositionCommand =   new AutonomousDistance(m_drivetrainSubsystem);
+  private final Command m_middlePositionCommand = getAutonomousCommand();
+  private final Command m_rightPositionCommand = new AutonomousDistance(m_drivetrainSubsystem);
+  SendableChooser<Command> m_chooser = new SendableChooser<>();
+  final ShuffleboardTab tab =  Shuffleboard.getTab("Main Tab");
 
 
-  final CommandXboxController m_controller = new CommandXboxController(0);
+    final CommandXboxController m_controller = new CommandXboxController(0);
   final CommandXboxController m_subcontroller = new CommandXboxController(1);
 
   public RobotContainer() {
@@ -38,7 +52,11 @@ public class RobotContainer {
     // Left stick X axis -> left and right movement
     // Right stick X axis -> rotation
 
-    
+    m_chooser.setDefaultOption("Right Position", m_rightPositionCommand);
+    m_chooser.addOption("Left Position", m_leftPositionCommand);
+    m_chooser.addOption("Middle Position", m_middlePositionCommand);
+    tab.add(m_chooser);
+
     //Prabhu Initialize Drive system to forward facing
     m_drivetrainSubsystem.drive(
         ChassisSpeeds.fromFieldRelativeSpeeds(
@@ -94,8 +112,8 @@ public class RobotContainer {
   public Command getAutonomousCommand( ){
     // An ExampleCommand will run in autonomous
     //return new InstantCommand();
-    //return new PlatformDockPidCommand_Pitch(m_drivetrainSubsystem);
-    return new  AutonomousDistance(m_drivetrainSubsystem);
+    return new PlatformDockPidCommand_Pitch(m_drivetrainSubsystem);
+    //return new  AutonomousDistance(m_drivetrainSubsystem);
   }
 
   private static double deadband(double value, double deadband) {

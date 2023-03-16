@@ -340,4 +340,12 @@ public void drive_parameters(double x_speed, double y_speed, double final_angle)
 public float getPitch() {
         return m_navx.getPitch();
 }
+
+public double getRoll() {
+        return m_navx.getRoll();
+}
+
+public double getYaw() {
+    return m_navx.getYaw();
+}
 }
