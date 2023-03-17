@@ -53,7 +53,7 @@ public class PlatformDockPidCommand_Pitch extends PIDCommand {
     if (Math.abs(pitch) < 2.5)
     {
       calculatedpitch=0.00000001;
-      last_pitch=0.00000001;
+      
 
     }
     else if(Math.abs(pitch) < 40)

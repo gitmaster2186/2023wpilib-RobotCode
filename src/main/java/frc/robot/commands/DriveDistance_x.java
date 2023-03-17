@@ -42,7 +42,7 @@ public class DriveDistance_x extends CommandBase {
    System.out.println("start_pos_x");
    System.out.println(start_pos_x);
    dis_fin=0;
-   SmartDashboard.putNumber("drivex",dis_fin);
+  // SmartDashboard.putNumber("drivex",dis_fin);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

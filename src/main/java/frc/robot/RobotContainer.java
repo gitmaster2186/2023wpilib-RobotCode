@@ -112,7 +112,9 @@ public class RobotContainer {
   public Command getAutonomousCommand( ){
     // An ExampleCommand will run in autonomous
     //return new InstantCommand();
-    return new PlatformDockPidCommand_Pitch(m_drivetrainSubsystem);
+    // System.out.println("In getAutonomousCommand called");
+    // return new PlatformDockPidCommand_Pitch(m_drivetrainSubsystem);
+    return new AutonomousDistance(m_drivetrainSubsystem);
     //return new  AutonomousDistance(m_drivetrainSubsystem);
   }
 
