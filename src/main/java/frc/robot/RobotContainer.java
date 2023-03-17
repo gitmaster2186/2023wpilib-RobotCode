@@ -32,11 +32,13 @@ public class RobotContainer {
   final ArmSubsystem m_armSubsystem = new ArmSubsystem();
   final ClawSubsystem m_clawSubsystem = new ClawSubsystem();
   
-  // Distance from grid to charge station: 
+  // Distance from grid to charge station: about 5 meters
   // Left and Right we will go straight forward past the community
   // Center will be directly behind the charge station, so we will run our main auto
+
   private final Command m_leftPositionCommand =   new AutonomousDistance(m_drivetrainSubsystem);
   private final Command m_middlePositionCommand = getAutonomousCommand();
+  // Last command will be balanced
   private final Command m_rightPositionCommand = new AutonomousDistance(m_drivetrainSubsystem);
   SendableChooser<Command> m_chooser = new SendableChooser<>();
   final ShuffleboardTab tab =  Shuffleboard.getTab("Main Tab");
@@ -112,8 +114,9 @@ public class RobotContainer {
   public Command getAutonomousCommand( ){
     // An ExampleCommand will run in autonomous
     //return new InstantCommand();
-    return new PlatformDockPidCommand_Pitch(m_drivetrainSubsystem);
-    //return new  AutonomousDistance(m_drivetrainSubsystem);
+    System.out.println("In getAutonomousCommand called");
+    // return new PlatformDockPidCommand_Pitch(m_drivetrainSubsystem);
+    return new AutonomousDistance(m_drivetrainSubsystem);
   }
 
   private static double deadband(double value, double deadband) {

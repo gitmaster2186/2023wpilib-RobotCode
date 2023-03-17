@@ -91,12 +91,12 @@ public class Robot extends TimedRobot {
   //  SmartDashboard.putNumber("getPitch",m_navx.getRoll() );
   //  SmartDashboard.putNumber("getYaw",m_navx.getYaw() );
     
-     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    //  m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
-    // schedule the autonomous command (example)
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.schedule();
-    }
+    // // schedule the autonomous command (example)
+    // if (m_autonomousCommand != null) {
+    //   m_autonomousCommand.schedule();
+    // }
     //   System.out.println("in autonomous Periodic");
     //}
   }
