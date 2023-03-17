@@ -37,8 +37,8 @@ public class DriveDistance_y extends CommandBase {
     // m_drive.zeroGyroscope();
    //m_drive.SwerveDriveOdomertyInitialize();
    start_pos_y=m_drive.getCurrentPose().getY();
-   System.out.println("start_pos_y");
-   System.out.println(start_pos_y);
+   //System.out.println("start_pos_y");
+   //System.out.println(start_pos_y);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

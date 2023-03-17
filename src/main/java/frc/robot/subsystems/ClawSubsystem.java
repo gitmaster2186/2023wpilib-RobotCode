@@ -206,7 +206,7 @@ public class ClawSubsystem extends SubsystemBase
     
     public void setClawSpeed(double joystickInput) {
         //FIXME add limit switches here or encoder max values
-        System.out.println("Set claw speed to " + joystickInput);
+        //System.out.println("Set claw speed to " + joystickInput);
         m_clawPIDController.setReference(joystickInput * MAX_VOLTAGE, CANSparkMax.ControlType.kVoltage, PID_SLOT_ID);
     }
     
@@ -223,14 +223,14 @@ public class ClawSubsystem extends SubsystemBase
         
         public Object lower() {
             if(this.position <= 0) {
-                System.out.println("At lowest position");
+                // System.out.println("At lowest position");
                 return this;
             }
             return Object.values()[this.position - 1];
         }
         public Object raise() {
             if(this.position >= Object.values().length - 1) {
-                System.out.println("At max position");
+                // System.out.println("At max position");
                 return this;
             }
             return Object.values()[this.position + 1];

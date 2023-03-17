@@ -29,7 +29,7 @@ public class DriveDistance_x extends CommandBase {
     m_speed = speed;
     m_drive = drive;
     addRequirements(drive);
-    System.out.println("Drive Distance Init Constructor");
+    // System.out.println("Drive Distance Init Constructor");
   }
 
   // Called when the command is initially scheduled.
@@ -40,17 +40,17 @@ public class DriveDistance_x extends CommandBase {
     // m_drive.zeroGyroscope();
 //   m_drive.SwerveDriveOdomertyInitialize();
    start_pos_x=m_drive.getCurrentPose().getX();
-   System.out.println("start_pos_x");
-   System.out.println(start_pos_x);
+   //System.out.println("start_pos_x");
+   //System.out.println(start_pos_x);
    dis_fin=0;
-   SmartDashboard.putNumber("drivex",dis_fin);
+  // SmartDashboard.putNumber("drivex",dis_fin);
    double m_dis_fin = 0;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    System.out.println("Drive Distance execute");
+    // System.out.println("Drive Distance execute");
     SmartDashboard.putNumber("drive Execute x",dis_fin);
     m_drive.drive(new ChassisSpeeds(m_speed,0,0));
   }
@@ -58,7 +58,7 @@ public class DriveDistance_x extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    System.out.println("Drive Distance end");
+   // System.out.println("Drive Distance end");
     m_drive.drive (new ChassisSpeeds(0, 0, 0));
   }
 

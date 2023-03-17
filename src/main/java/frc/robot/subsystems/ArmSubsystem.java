@@ -242,14 +242,14 @@ public class ArmSubsystem extends SubsystemBase
         
         public Position lower() {
             if(this.position <= 0) {
-                System.out.println("At lowest position");
+                // System.out.println("At lowest position");
                 return this;
             }
             return Position.values()[this.position - 1];
         }
         public Position raise() {
             if(this.position >= Position.values().length - 1) {
-                System.out.println("At max position");
+                // System.out.println("At max position");
                 return this;
             }
             return Position.values()[this.position + 1];
