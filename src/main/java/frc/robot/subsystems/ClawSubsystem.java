@@ -38,9 +38,12 @@ public class ClawSubsystem extends SubsystemBase
     public final double DEADBAND = 0.25;
     private boolean isLimitSwitchEnabled = true;
     private boolean isSoftLimitEnabled = false; //tune before enabling
-    private float FORWARD_SOFT_LIMIT = 1;
-    private float REVERSE_SOFT_LIMIT = -89;
+    private float FORWARD_SOFT_LIMIT = 0.5f;
+    private float REVERSE_SOFT_LIMIT = -26;
     private final int PID_SLOT_ID = 0;
+    private final double MAX_VOLTAGE = 2;
+    private final double MAX_ACCEL = 10 ;
+
 
         
     //PID values from documentation here https://github.com/REVrobotics/SPARK-MAX-Examples
@@ -55,10 +58,10 @@ public class ClawSubsystem extends SubsystemBase
         //m_clawMotor.setSmartCurrentLimit(int StallLimit, int FreeLimit); //already enabled by deaflt to 80A and 20A respectively. Test other new code before enabling this. 
 
         currentRotation = m_clawEncoder.getPosition();
-        //m_clawPIDController.setSmartMotionMaxAccel(maxAccel, PID_SLOT_ID);
+        m_clawPIDController.setSmartMotionMaxAccel(MAX_ACCEL, PID_SLOT_ID);
         //m_clawPIDController.setSmartMotionMaxVelocity(maxVelocity, PID_SLOT_ID);
 
-        SmartDashboard.putNumber("current Rotation", currentRotation);
+        //SmartDashboard.putNumber("current Rotation", currentRotation);
         // SmartDashboard.putNumber("Max Acceleration", maxAccel);
         // SmartDashboard.putNumber("Max Velocity", maxVelocity);
 
@@ -70,7 +73,7 @@ public class ClawSubsystem extends SubsystemBase
         m_forwardLimit.enableLimitSwitch(isLimitSwitchEnabled);
         m_reverseLimit.enableLimitSwitch(isLimitSwitchEnabled);
 
-        SmartDashboard.putBoolean("Limit Switch Enabled", isLimitSwitchEnabled);
+        //SmartDashboard.putBoolean("Limit Switch Enabled", isLimitSwitchEnabled);
 
 
 
@@ -79,9 +82,9 @@ public class ClawSubsystem extends SubsystemBase
         m_clawMotor.setSoftLimit(CANSparkMax.SoftLimitDirection.kForward, FORWARD_SOFT_LIMIT);
         m_clawMotor.setSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, REVERSE_SOFT_LIMIT);
 
-        SmartDashboard.putBoolean("Soft Limit Enabled", isSoftLimitEnabled);
-        SmartDashboard.putNumber("Forward Soft Limit", m_clawMotor.getSoftLimit(CANSparkMax.SoftLimitDirection.kForward));
-        SmartDashboard.putNumber("Reverse Soft Limit", m_clawMotor.getSoftLimit(CANSparkMax.SoftLimitDirection.kReverse));
+        // SmartDashboard.putBoolean("Soft Limit Enabled", isSoftLimitEnabled);
+        // SmartDashboard.putNumber("Forward Soft Limit", m_clawMotor.getSoftLimit(CANSparkMax.SoftLimitDirection.kForward));
+        // SmartDashboard.putNumber("Reverse Soft Limit", m_clawMotor.getSoftLimit(CANSparkMax.SoftLimitDirection.kReverse));
 
         
         
@@ -94,22 +97,22 @@ public class ClawSubsystem extends SubsystemBase
         m_clawPIDController.setPositionPIDWrappingMinInput(0.1);
         m_clawPIDController.setPositionPIDWrappingMaxInput(0.9);
 
-        SmartDashboard.putNumber("P Gain", kP);
-        SmartDashboard.putNumber("I Gain", kI);
-        SmartDashboard.putNumber("D Gain", kD);
-        SmartDashboard.putNumber("I Zone", kIz);
-        SmartDashboard.putNumber("Feed Forward", kFF);
-        SmartDashboard.putNumber("Max Output", kMaxOutput);
-        SmartDashboard.putNumber("Min Output", kMinOutput);
+        // SmartDashboard.putNumber("P Gain", kP);
+        // SmartDashboard.putNumber("I Gain", kI);
+        // SmartDashboard.putNumber("D Gain", kD);
+        // SmartDashboard.putNumber("I Zone", kIz);
+        // SmartDashboard.putNumber("Feed Forward", kFF);
+        // SmartDashboard.putNumber("Max Output", kMaxOutput);
+        // SmartDashboard.putNumber("Min Output", kMinOutput);
 
 
 
         
         //SmartDashboard.putNumberArray("Rotation Map", rotationMap);
-        for (int r = 0; r < rotationMap.length; r++) {
-            SmartDashboard.putNumber("Rotation Map of " + r, rotationMap[r]);
-        }
-        SmartDashboard.putString("current Position", currentPosition.name());
+        // for (int r = 0; r < rotationMap.length; r++) {
+        //     SmartDashboard.putNumber("Rotation Map of " + r, rotationMap[r]);
+        // }
+        // SmartDashboard.putString("current Position", currentPosition.name());
 
         /* 
         use SmartDashboard tabs
@@ -133,49 +136,49 @@ public class ClawSubsystem extends SubsystemBase
     public void periodic() {
         //uncomment this and previous block to set values with smart dashboard for testing
         
-        double p = SmartDashboard.getNumber("P Gain", kP);
-        double i = SmartDashboard.getNumber("I Gain", kI);
-        double d = SmartDashboard.getNumber("D Gain", kD);
-        double iz = SmartDashboard.getNumber("I Zone", kIz);
-        double ff = SmartDashboard.getNumber("Feed Forward", kFF);
-        double max = SmartDashboard.getNumber("Max Output", kMaxOutput);
-        double min = SmartDashboard.getNumber("Min Output", kMinOutput);
+        // double p = SmartDashboard.getNumber("P Gain", kP);
+        // double i = SmartDashboard.getNumber("I Gain", kI);
+        // double d = SmartDashboard.getNumber("D Gain", kD);
+        // double iz = SmartDashboard.getNumber("I Zone", kIz);
+        // double ff = SmartDashboard.getNumber("Feed Forward", kFF);
+        // double max = SmartDashboard.getNumber("Max Output", kMaxOutput);
+        // double min = SmartDashboard.getNumber("Min Output", kMinOutput);
         
         
-        SmartDashboard.putNumber("current Rotation", m_clawEncoder.getPosition());
-        SmartDashboard.putString("current Position", currentPosition.name());
-        SmartDashboard.putNumber("Set Point", rotationMap[currentPosition.position]);
+        // SmartDashboard.putNumber("current Rotation", m_clawEncoder.getPosition());
+        SmartDashboard.putNumber("current claw Rotation", m_clawEncoder.getPosition());
+        // SmartDashboard.putNumber("Set Point", rotationMap[currentPosition.position]);
 
 
-        SmartDashboard.putBoolean("Forward Limit Switch", m_forwardLimit.isPressed());
-        SmartDashboard.putBoolean("Reverse Limit Switch", m_reverseLimit.isPressed());
+        // SmartDashboard.putBoolean("Forward Limit Switch", m_forwardLimit.isPressed());
+        // SmartDashboard.putBoolean("Reverse Limit Switch", m_reverseLimit.isPressed());
 
         
 
 
-        float forwardSoftLimit = (float) SmartDashboard.getNumber("Forward Soft Limit", FORWARD_SOFT_LIMIT);
-        float reverseSoftLimit = (float) SmartDashboard.getNumber("Reverse Soft Limit", REVERSE_SOFT_LIMIT);
-        if (forwardSoftLimit != FORWARD_SOFT_LIMIT) {
-            m_clawMotor.setSoftLimit(CANSparkMax.SoftLimitDirection.kForward, forwardSoftLimit);
-            FORWARD_SOFT_LIMIT = forwardSoftLimit;
-        }
-        if (reverseSoftLimit != REVERSE_SOFT_LIMIT) {
-            m_clawMotor.setSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, reverseSoftLimit);
-            REVERSE_SOFT_LIMIT = reverseSoftLimit;
-        }
+        // float forwardSoftLimit = (float) SmartDashboard.getNumber("Forward Soft Limit", FORWARD_SOFT_LIMIT);
+        // float reverseSoftLimit = (float) SmartDashboard.getNumber("Reverse Soft Limit", REVERSE_SOFT_LIMIT);
+        // if (forwardSoftLimit != FORWARD_SOFT_LIMIT) {
+        //     m_clawMotor.setSoftLimit(CANSparkMax.SoftLimitDirection.kForward, forwardSoftLimit);
+        //     FORWARD_SOFT_LIMIT = forwardSoftLimit;
+        // }
+        // if (reverseSoftLimit != REVERSE_SOFT_LIMIT) {
+        //     m_clawMotor.setSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, reverseSoftLimit);
+        //     REVERSE_SOFT_LIMIT = reverseSoftLimit;
+        // }
         
-        if((p != kP)) { m_clawPIDController.setP(p); kP = p; }
-        if((i != kI)) { m_clawPIDController.setI(i); kI = i; }
-        if((d != kD)) { m_clawPIDController.setD(d); kD = d; }
-        if((iz != kIz)) { m_clawPIDController.setIZone(iz); kIz = iz; }
-        if((ff != kFF)) { m_clawPIDController.setFF(ff); kFF = ff; }
-        if((max != kMaxOutput) || (min != kMinOutput)) { 
-            m_clawPIDController.setOutputRange(min, max); 
-            kMinOutput = min; kMaxOutput = max; 
-        }
-        for (int r = 0; r < rotationMap.length; r++) {
-            rotationMap[r] = SmartDashboard.getNumber("Rotation Map of " + r, rotationMap[r]);
-        }
+        // if((p != kP)) { m_clawPIDController.setP(p); kP = p; }
+        // if((i != kI)) { m_clawPIDController.setI(i); kI = i; }
+        // if((d != kD)) { m_clawPIDController.setD(d); kD = d; }
+        // if((iz != kIz)) { m_clawPIDController.setIZone(iz); kIz = iz; }
+        // if((ff != kFF)) { m_clawPIDController.setFF(ff); kFF = ff; }
+        // if((max != kMaxOutput) || (min != kMinOutput)) { 
+        //     m_clawPIDController.setOutputRange(min, max); 
+        //     kMinOutput = min; kMaxOutput = max; 
+        // }
+        // for (int r = 0; r < rotationMap.length; r++) {
+        //     rotationMap[r] = SmartDashboard.getNumber("Rotation Map of " + r, rotationMap[r]);
+        // }
     }
     // I don't know if we need this method here. Uncomment if needed
     // public void setClawPosition(Position toSet) {
@@ -203,7 +206,8 @@ public class ClawSubsystem extends SubsystemBase
     
     public void setClawSpeed(double joystickInput) {
         //FIXME add limit switches here or encoder max values
-        m_clawPIDController.setReference(-joystickInput * Constants.MAX_Voltage, CANSparkMax.ControlType.kVoltage, PID_SLOT_ID);
+        System.out.println("Set claw speed to " + joystickInput);
+        m_clawPIDController.setReference(joystickInput * MAX_VOLTAGE, CANSparkMax.ControlType.kVoltage, PID_SLOT_ID);
     }
     
     public enum Object{
