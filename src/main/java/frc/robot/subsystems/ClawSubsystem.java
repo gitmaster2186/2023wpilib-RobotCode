@@ -39,7 +39,7 @@ public class ClawSubsystem extends SubsystemBase
     private boolean isLimitSwitchEnabled = true;
     private boolean isSoftLimitEnabled = false; //tune before enabling
     private float FORWARD_SOFT_LIMIT = 0.5f;
-    private float REVERSE_SOFT_LIMIT = 20;
+    private float REVERSE_SOFT_LIMIT = -26;
     private final int PID_SLOT_ID = 0;
     private final double MAX_VOLTAGE = 2;
     private final double MAX_ACCEL = 10 ;
@@ -146,7 +146,7 @@ public class ClawSubsystem extends SubsystemBase
         
         
         // SmartDashboard.putNumber("current Rotation", m_clawEncoder.getPosition());
-        // SmartDashboard.putString("current Position", currentPosition.name());
+        SmartDashboard.putNumber("current claw Rotation", m_clawEncoder.getPosition());
         // SmartDashboard.putNumber("Set Point", rotationMap[currentPosition.position]);
 
 
@@ -206,6 +206,7 @@ public class ClawSubsystem extends SubsystemBase
     
     public void setClawSpeed(double joystickInput) {
         //FIXME add limit switches here or encoder max values
+        System.out.println("Set claw speed to " + joystickInput);
         m_clawPIDController.setReference(joystickInput * MAX_VOLTAGE, CANSparkMax.ControlType.kVoltage, PID_SLOT_ID);
     }
     

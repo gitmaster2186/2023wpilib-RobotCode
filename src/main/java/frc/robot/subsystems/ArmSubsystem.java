@@ -26,7 +26,7 @@ public class ArmSubsystem extends SubsystemBase
     private SparkMaxPIDController m_armPIDController;
     private RelativeEncoder m_armEncoder;
     private Position currentPosition = Position.ground;
-    private double[] rotationMap = {-10, -30, -50, -70, -80}; //move to constants eventually
+    private double[] rotationMap = {-1, -10, -50, -70, -90}; //move to constants eventually
     private double currentRotation = 0;
     private double MAX_VOLTAGE = 6;
     //FIXME Change these values when needed
@@ -40,7 +40,7 @@ public class ArmSubsystem extends SubsystemBase
     public final double DEADBAND = 0.1;
     private boolean isLimitSwitchEnabled = true;
     private boolean isSoftLimitEnabled = true; //change this one 
-    private float FORWARD_SOFT_LIMIT = -0.5f;
+    private float FORWARD_SOFT_LIMIT = -11.5f;
     private float REVERSE_SOFT_LIMIT = -96.3f;
     private SparkMaxLimitSwitch m_forwardLimit;
     private SparkMaxLimitSwitch m_reverseLimit;
@@ -144,7 +144,7 @@ public class ArmSubsystem extends SubsystemBase
         // double min = SmartDashboard.getNumber("Min Output", kMinOutput);
         
         
-        // SmartDashboard.putNumber("current Rotation", m_armEncoder.getPosition());
+        SmartDashboard.putNumber("current arm Rotation", m_armEncoder.getPosition());
         // SmartDashboard.putString("current Position", currentPosition.name());
         // SmartDashboard.putNumber("Set Point", rotationMap[currentPosition.position]);
 
@@ -218,6 +218,13 @@ public class ArmSubsystem extends SubsystemBase
     public void setArmSpeed(double joystickInput) {
         //FIXME add limit switches here or encoder max values
         m_armPIDController.setReference(joystickInput * MAX_VOLTAGE, CANSparkMax.ControlType.kVoltage, PID_SLOT_ID);
+    }
+
+    public void bumpUp() {
+        //FIXME add limit switches here or encoder max values
+        currentRotation = m_armEncoder.getPosition();
+        double toSet = currentRotation - 5;
+        m_armPIDController.setReference(toSet, CANSparkMax.ControlType.kPosition, PID_SLOT_ID);
     }
     
     public enum Position{

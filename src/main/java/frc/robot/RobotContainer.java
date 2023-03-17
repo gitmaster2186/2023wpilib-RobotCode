@@ -98,7 +98,7 @@ public class RobotContainer {
     m_subcontroller.rightBumper().onTrue(Commands.runOnce(() -> m_armSubsystem.raiseArmPosition(), m_armSubsystem));
     m_subcontroller.axisGreaterThan(XboxController.Axis.kLeftY.value,  m_armSubsystem.DEADBAND).onTrue(new ArmSpeedCommand(() -> m_subcontroller.getLeftY(), m_armSubsystem));
     m_subcontroller.axisLessThan(XboxController.Axis.kLeftY.value, -m_armSubsystem.DEADBAND).onTrue(new ArmSpeedCommand(() -> m_subcontroller.getLeftY(), m_armSubsystem));
-   
+    m_subcontroller.rightBumper().onTrue(Commands.runOnce(() -> m_armSubsystem.bumpUp(), m_armSubsystem));
    m_controller.axisGreaterThan(XboxController.Axis.kRightTrigger.value, m_clawSubsystem.DEADBAND).onTrue(new ClawSpeedCommand(() -> m_controller.getRightTriggerAxis(), m_clawSubsystem));
    m_controller.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, m_clawSubsystem.DEADBAND).onTrue(new ClawSpeedCommand(() -> -m_controller.getLeftTriggerAxis(), m_clawSubsystem));
 
