@@ -24,7 +24,9 @@ public class AutonomousDistance extends SequentialCommandGroup {
       new DriveDistance_x(-4, 5, drivetrainsubsystem),
        //new DriveDistance_y(-1, 0.6, drivetrainsubsystem)
        
-     new DriveDistance_y(2, 0.5, drivetrainsubsystem)
+     new DriveDistance_y(2, 0.5, drivetrainsubsystem),
+     new PlatformDockPidCommand_Pitch(drivetrainsubsystem)
+     
 
     //new TurnDegrees(3, 90,1, drivetrainsubsystem)
      // new DriveDistance_x(-2, 2, drivetrainsubsystem)

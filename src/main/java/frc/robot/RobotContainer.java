@@ -21,7 +21,7 @@ import frc.robot.commands.ArmSpeedCommand;
 import frc.robot.commands.AutonomousDistance;
 import frc.robot.commands.ClawSpeedCommand;
 import frc.robot.commands.DefaultDriveCommand;
-import frc.robot.commands.DrivePositionCommand;
+import frc.robot.commands.DriveDistance_x;
 import frc.robot.commands.PlatformDockPidCommand_Pitch;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
@@ -112,8 +112,9 @@ public class RobotContainer {
   public Command getAutonomousCommand( ){
     // An ExampleCommand will run in autonomous
     //return new InstantCommand();
-    return new PlatformDockPidCommand_Pitch(m_drivetrainSubsystem);
-    //return new  AutonomousDistance(m_drivetrainSubsystem);
+//    return new PlatformDockPidCommand_Pitch(m_drivetrainSubsystem);
+    return new  AutonomousDistance(m_drivetrainSubsystem);
+   
   }
 
   private static double deadband(double value, double deadband) {

@@ -37,7 +37,7 @@ private double m_start_degree=0;
     // Set motors to stop, read encoder values for starting point
     m_drive.drive( new ChassisSpeeds(0,0,0));
     // m_drive.zeroGyroscope();
-   // m_drive.SwerveDriveOdomertyInitialize();
+    m_drive.SwerveDriveOdomertyInitialize();
     //m_start_degree=m_drive.getCurrentPose().getRotation().getDegrees();
   System.out.print(m_start_degree);
   }

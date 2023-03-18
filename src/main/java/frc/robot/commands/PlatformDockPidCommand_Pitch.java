@@ -28,7 +28,7 @@ public class PlatformDockPidCommand_Pitch extends PIDCommand {
         // The contpitcher that the command will use
         new PIDController(Constants.kP,Constants.kI, Constants.kD),//P,I,D
         // This should return the measurement
-        () -> smoothpitch(m_navx.getPitch()),
+         () -> m_navx.getPitch(),
         // This should return the setpoint (can also be a constant)
         () -> 0,
         // This uses the output
@@ -37,9 +37,11 @@ public class PlatformDockPidCommand_Pitch extends PIDCommand {
             
 
             m_drivetrainSubsystem.drive_pid_x(output);
-        });
+        },
+          m_drivetrainSubsystem
+         );
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(m_drivetrainSubsystem);
+    //addRequirements(m_drivetrainSubsystem);
     // Configure additional PID options by calling `getContpitcher` here.
   
     
