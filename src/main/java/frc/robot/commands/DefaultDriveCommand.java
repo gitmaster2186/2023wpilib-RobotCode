@@ -12,6 +12,8 @@ public class DefaultDriveCommand extends CommandBase {
     private final DoubleSupplier m_translationXSupplier;
     private final DoubleSupplier m_translationYSupplier;
     private final DoubleSupplier m_rotationSupplier;
+    // precision - add a scale factor to multipy by
+    private final DoubleSupplier scaleFactor;
 
     public DefaultDriveCommand(DrivetrainSubsystem drivetrainSubsystem,
                                DoubleSupplier translationXSupplier,
@@ -21,6 +23,22 @@ public class DefaultDriveCommand extends CommandBase {
         this.m_translationXSupplier = translationXSupplier;
         this.m_translationYSupplier = translationYSupplier;
         this.m_rotationSupplier = rotationSupplier;
+        // precision - if using older initalization, just return 1
+        this.scaleFactor = () -> 1.0;
+
+        addRequirements(drivetrainSubsystem);
+    }
+
+    public DefaultDriveCommand(DrivetrainSubsystem drivetrainSubsystem,
+                               DoubleSupplier translationXSupplier,
+                               DoubleSupplier translationYSupplier,
+                               DoubleSupplier rotationSupplier,
+                               DoubleSupplier scaleFactor) {
+        this.m_drivetrainSubsystem = drivetrainSubsystem;
+        this.m_translationXSupplier = translationXSupplier;
+        this.m_translationYSupplier = translationYSupplier;
+        this.m_rotationSupplier = rotationSupplier;
+        this.scaleFactor = scaleFactor;
 
         addRequirements(drivetrainSubsystem);
     }
@@ -30,8 +48,9 @@ public class DefaultDriveCommand extends CommandBase {
         // You can use `new ChassisSpeeds(...)` for robot-oriented movement instead of field-oriented movement
         m_drivetrainSubsystem.drive(
                 ChassisSpeeds.fromFieldRelativeSpeeds(
-                        m_translationXSupplier.getAsDouble(),
-                        m_translationYSupplier.getAsDouble(),
+                    // precision - multipy values by scale
+                        m_translationXSupplier.getAsDouble() * scaleFactor.getAsDouble(),
+                        m_translationYSupplier.getAsDouble() * scaleFactor.getAsDouble(),
                         m_rotationSupplier.getAsDouble(),
                         m_drivetrainSubsystem.getGyroscopeRotation()
                 )

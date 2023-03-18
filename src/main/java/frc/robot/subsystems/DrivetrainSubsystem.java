@@ -38,8 +38,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
    * <p>
    * This can be reduced to cap the robot's maximum speed. Typically, this is useful during initial testing of the robot.
    */
-
-  public static final double MAX_VOLTAGE = Constants.MAX_Voltage;
+// precision - add a "fast" mode and the scale facor we want to apply
+  public double MAX_VOLTAGE = Constants.MAX_Voltage;
+  private boolean isFast = true;
+  private final double joystickDownscaleFactor = 0.3;
   // FIXME Measure the drivetrain's maximum velocity or calculate the theoretical.
   //  The formula for calculating the theoretical maximum velocity is:
   //   <Motor free speed RPM> / 60 * <Drive reduction> * <Wheel diameter meters> * pi
@@ -195,6 +197,18 @@ public static final double MAX_VELOCITY_METERS_PER_SECOND = 4000 / 60.0 *
   // System.out.println("zeroGyroscope method has been called");
 
   }
+  // precision - toggle slow mode
+  public void toggleSlow() {
+        isFast = !isFast;
+  }
+  // precision - return the scale factor for the doublesupplier
+  public double getDriveScale() {
+        if (isFast) {
+              return 1.0;  
+        }
+        return 0.25;
+  }
+  
 
   public Rotation2d getGyroscopeRotation() {
     // FIXME Remove if you are using a Pigeon

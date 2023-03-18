@@ -41,6 +41,7 @@ public class RobotContainer {
   private final Command m_middlePositionCommand = new AutonomousDistance(m_drivetrainSubsystem);
   // Last command will be balanced
   private final Command m_rightPositionCommand = new DriveDistance_x(-2, 4.5, m_drivetrainSubsystem);
+  private final Command m_balanceCommand = new PlatformDockPidCommand_Pitch(m_drivetrainSubsystem);
   SendableChooser<Command> m_autoChooser = new SendableChooser<>();
   final ShuffleboardTab tab =  Shuffleboard.getTab("Main Tab");
 
@@ -58,6 +59,8 @@ public class RobotContainer {
     m_autoChooser.setDefaultOption("Right Position", m_rightPositionCommand);
     m_autoChooser.addOption("Left Position", m_leftPositionCommand);
     m_autoChooser.addOption("Middle Position", m_middlePositionCommand);
+    m_autoChooser.addOption("Balance", m_balanceCommand);
+
     tab.add(m_autoChooser);
 
     //Prabhu Initialize Drive system to forward facing
@@ -76,7 +79,8 @@ public class RobotContainer {
               m_drivetrainSubsystem,
           () -> -modifyAxis(m_controller.getLeftY()) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
           () -> -modifyAxis(m_controller.getLeftX()) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-          () -> -modifyAxis(m_controller.getRightX()) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND
+          () -> -modifyAxis(m_controller.getRightX()) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
+          () -> m_drivetrainSubsystem.getDriveScale()
     ));
 
     // Configure the button bindings
@@ -104,7 +108,8 @@ public class RobotContainer {
       m_subcontroller.axisLessThan(XboxController.Axis.kLeftY.value, -m_armSubsystem.DEADBAND).onTrue(new ArmSpeedCommand(() -> m_subcontroller.getLeftY(), m_armSubsystem));
     m_controller.axisGreaterThan(XboxController.Axis.kRightTrigger.value, m_clawSubsystem.DEADBAND).onTrue(new ClawSpeedCommand(() -> m_controller.getRightTriggerAxis(), m_clawSubsystem));
     m_controller.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, m_clawSubsystem.DEADBAND).onTrue(new ClawSpeedCommand(() -> -m_controller.getLeftTriggerAxis(), m_clawSubsystem));
-
+    // precision - x to toggle slow mode
+    m_controller.x().onTrue(Commands.runOnce(() -> m_drivetrainSubsystem.toggleSlow()));
    m_subcontroller.rightBumper().onTrue(Commands.runOnce(() -> m_armSubsystem.bumpUp(), m_armSubsystem));
   }
 
