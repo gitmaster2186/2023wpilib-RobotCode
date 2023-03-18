@@ -36,11 +36,12 @@ public class ArmSpeedCommand extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         m_ArmSubsystem.setArmSpeed(0);
+        System.out.println("Arm Speed command ended");
 
     }
     @Override
     public boolean isFinished() {
-        return Math.abs(ySupplier.getAsDouble()) < m_ArmSubsystem.DEADBAND;
+        return Math.abs(ySupplier.getAsDouble()) < 0.1;
     }
 
 }

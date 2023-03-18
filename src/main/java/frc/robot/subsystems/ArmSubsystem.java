@@ -37,7 +37,7 @@ public class ArmSubsystem extends SubsystemBase
 
     //create the roation map
     //create limit configuration variables
-    public final double DEADBAND = 0.1;
+    public final double DEADBAND = 0.2;
     private boolean isLimitSwitchEnabled = false;
     private boolean isSoftLimitEnabled = true; //change this one 
     private float FORWARD_SOFT_LIMIT = -7.7f;

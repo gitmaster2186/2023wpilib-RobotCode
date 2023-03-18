@@ -21,6 +21,7 @@ import frc.robot.commands.ArmSpeedCommand;
 import frc.robot.commands.AutonomousDistance;
 import frc.robot.commands.ClawSpeedCommand;
 import frc.robot.commands.DefaultDriveCommand;
+import frc.robot.commands.DriveDistance_x;
 import frc.robot.commands.DrivePositionCommand;
 import frc.robot.commands.PlatformDockPidCommand_Pitch;
 import frc.robot.subsystems.ArmSubsystem;
@@ -36,11 +37,11 @@ public class RobotContainer {
   // Left and Right we will go straight forward past the community
   // Center will be directly behind the charge station, so we will run our main auto
 
-  private final Command m_leftPositionCommand =   getAutonomousCommand();
-  private final Command m_middlePositionCommand = getAutonomousCommand();
+  private final Command m_leftPositionCommand =   new DriveDistance_x(-2, 4.5, m_drivetrainSubsystem);
+  private final Command m_middlePositionCommand = new AutonomousDistance(m_drivetrainSubsystem);
   // Last command will be balanced
-  private final Command m_rightPositionCommand = getAutonomousCommand();
-  SendableChooser<Command> m_chooser = new SendableChooser<>();
+  private final Command m_rightPositionCommand = new DriveDistance_x(-2, 4.5, m_drivetrainSubsystem);
+  SendableChooser<Command> m_autoChooser = new SendableChooser<>();
   final ShuffleboardTab tab =  Shuffleboard.getTab("Main Tab");
 
 
@@ -54,10 +55,10 @@ public class RobotContainer {
     // Left stick X axis -> left and right movement
     // Right stick X axis -> rotation
 
-    m_chooser.setDefaultOption("Right Position", m_rightPositionCommand);
-    m_chooser.addOption("Left Position", m_leftPositionCommand);
-    m_chooser.addOption("Middle Position", m_middlePositionCommand);
-    tab.add(m_chooser);
+    m_autoChooser.setDefaultOption("Right Position", m_rightPositionCommand);
+    m_autoChooser.addOption("Left Position", m_leftPositionCommand);
+    m_autoChooser.addOption("Middle Position", m_middlePositionCommand);
+    tab.add(m_autoChooser);
 
     //Prabhu Initialize Drive system to forward facing
     m_drivetrainSubsystem.drive(
@@ -112,12 +113,14 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  public Command getAutonomousCommand( ){
+  public Command getAutonomousCommand(){
     // An ExampleCommand will run in autonomous
     //return new InstantCommand();
-    System.out.println("In getAutonomousCommand called");
+    
+    //System.out.println("In getAutonomousCommand called");
     // return new PlatformDockPidCommand_Pitch(m_drivetrainSubsystem);
-    return new AutonomousDistance(m_drivetrainSubsystem);
+    //return new AutonomousDistance(m_drivetrainSubsystem);
+    return m_autoChooser.getSelected();
   }
 
   private static double deadband(double value, double deadband) {
