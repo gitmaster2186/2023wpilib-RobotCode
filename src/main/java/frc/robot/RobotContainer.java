@@ -36,10 +36,10 @@ public class RobotContainer {
   // Left and Right we will go straight forward past the community
   // Center will be directly behind the charge station, so we will run our main auto
 
-  private final Command m_leftPositionCommand =   new AutonomousDistance(m_drivetrainSubsystem);
+  private final Command m_leftPositionCommand =   getAutonomousCommand();
   private final Command m_middlePositionCommand = getAutonomousCommand();
   // Last command will be balanced
-  private final Command m_rightPositionCommand = new AutonomousDistance(m_drivetrainSubsystem);
+  private final Command m_rightPositionCommand = getAutonomousCommand();
   SendableChooser<Command> m_chooser = new SendableChooser<>();
   final ShuffleboardTab tab =  Shuffleboard.getTab("Main Tab");
 
@@ -98,12 +98,13 @@ public class RobotContainer {
     m_controller.a().onTrue(Commands.runOnce(() -> m_drivetrainSubsystem.zeroGyroscope()));
     m_subcontroller.leftBumper().onTrue(Commands.runOnce(() -> m_armSubsystem.lowerArmPosition(), m_armSubsystem));
     m_subcontroller.rightBumper().onTrue(Commands.runOnce(() -> m_armSubsystem.raiseArmPosition(), m_armSubsystem));
+    
     m_subcontroller.axisGreaterThan(XboxController.Axis.kLeftY.value,  m_armSubsystem.DEADBAND).onTrue(new ArmSpeedCommand(() -> m_subcontroller.getLeftY(), m_armSubsystem));
-    m_subcontroller.axisLessThan(XboxController.Axis.kLeftY.value, -m_armSubsystem.DEADBAND).onTrue(new ArmSpeedCommand(() -> m_subcontroller.getLeftY(), m_armSubsystem));
-    m_subcontroller.rightBumper().onTrue(Commands.runOnce(() -> m_armSubsystem.bumpUp(), m_armSubsystem));
-   m_controller.axisGreaterThan(XboxController.Axis.kRightTrigger.value, m_clawSubsystem.DEADBAND).onTrue(new ClawSpeedCommand(() -> m_controller.getRightTriggerAxis(), m_clawSubsystem));
-   m_controller.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, m_clawSubsystem.DEADBAND).onTrue(new ClawSpeedCommand(() -> -m_controller.getLeftTriggerAxis(), m_clawSubsystem));
+      m_subcontroller.axisLessThan(XboxController.Axis.kLeftY.value, -m_armSubsystem.DEADBAND).onTrue(new ArmSpeedCommand(() -> m_subcontroller.getLeftY(), m_armSubsystem));
+    m_controller.axisGreaterThan(XboxController.Axis.kRightTrigger.value, m_clawSubsystem.DEADBAND).onTrue(new ClawSpeedCommand(() -> m_controller.getRightTriggerAxis(), m_clawSubsystem));
+    m_controller.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, m_clawSubsystem.DEADBAND).onTrue(new ClawSpeedCommand(() -> -m_controller.getLeftTriggerAxis(), m_clawSubsystem));
 
+   m_subcontroller.rightBumper().onTrue(Commands.runOnce(() -> m_armSubsystem.bumpUp(), m_armSubsystem));
   }
 
   /**

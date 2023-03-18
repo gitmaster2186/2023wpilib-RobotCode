@@ -41,7 +41,7 @@ public class ClawSubsystem extends SubsystemBase
     private float FORWARD_SOFT_LIMIT = 0.5f;
     private float REVERSE_SOFT_LIMIT = -26;
     private final int PID_SLOT_ID = 0;
-    private final double MAX_VOLTAGE = 2;
+    private final double MAX_VOLTAGE = 4;
     private final double MAX_ACCEL = 10 ;
 
 

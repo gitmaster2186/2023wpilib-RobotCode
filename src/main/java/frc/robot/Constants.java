@@ -65,5 +65,5 @@ public final class Constants {
 
 
       // Prabhu - Max voltage changed from 12 to 2
-    public static double MAX_Voltage=3;
+    public static double MAX_Voltage=5;
 }

@@ -26,7 +26,7 @@ public class ArmSubsystem extends SubsystemBase
     private SparkMaxPIDController m_armPIDController;
     private RelativeEncoder m_armEncoder;
     private Position currentPosition = Position.ground;
-    private double[] rotationMap = {-1, -10, -50, -70, -90}; //move to constants eventually
+    private double[] rotationMap = {-6, -58.4, -84, -95, -98}; //move to constants eventually
     private double currentRotation = 0;
     private double MAX_VOLTAGE = 6;
     //FIXME Change these values when needed
@@ -38,9 +38,9 @@ public class ArmSubsystem extends SubsystemBase
     //create the roation map
     //create limit configuration variables
     public final double DEADBAND = 0.1;
-    private boolean isLimitSwitchEnabled = true;
+    private boolean isLimitSwitchEnabled = false;
     private boolean isSoftLimitEnabled = true; //change this one 
-    private float FORWARD_SOFT_LIMIT = -11.5f;
+    private float FORWARD_SOFT_LIMIT = -7.7f;
     private float REVERSE_SOFT_LIMIT = -96.3f;
     private SparkMaxLimitSwitch m_forwardLimit;
     private SparkMaxLimitSwitch m_reverseLimit;
@@ -48,7 +48,7 @@ public class ArmSubsystem extends SubsystemBase
         
     //PID values from documentation here https://github.com/REVrobotics/SPARK-MAX-Examples
     private double kP = 0.45, kI = 1e-5, kD = 1, kIz = 0, kFF = 0, 
-    kMaxOutput = 0.6, kMinOutput = -0.6; //PID max speeds
+    kMaxOutput = 0.5, kMinOutput = -0.5; //PID max speeds
     
     public ArmSubsystem() {
         m_armMotor = new CANSparkMax(ARM_MOTOR_ID, MotorType.kBrushless);
