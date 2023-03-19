@@ -9,13 +9,13 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DrivetrainSubsystem;
-import com.kauailabs.navx.frc.AHRS;
+
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Platform_Balance extends CommandBase {
   private final DrivetrainSubsystem m_drive;
-  public static AHRS m_navx = new AHRS(SPI.Port.kMXP, (byte) 200); // NavX connected over MXP
+  
   private double start_pos_x=0.0;
   int dis_fin=0;
   /**
@@ -50,7 +50,7 @@ public class Platform_Balance extends CommandBase {
   @Override
   public void execute() {
     System.out.print("in execute of Plain Balance");
-    m_drive.drive(new ChassisSpeeds(m_navx.getPitch(),0,0));
+    m_drive.drive(new ChassisSpeeds(m_drive.getPitch(),0,0));
   }
 
   // Called once the command ends or is interrupted.
