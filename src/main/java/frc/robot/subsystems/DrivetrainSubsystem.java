@@ -41,7 +41,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 // precision - add a "fast" mode and the scale facor we want to apply
   public double MAX_VOLTAGE = Constants.MAX_Voltage;
   private boolean isFast = true;
-  private final double joystickDownscaleFactor = 0.3;
+  private final double joystickDownscaleFactor = 0.4;
   // FIXME Measure the drivetrain's maximum velocity or calculate the theoretical.
   //  The formula for calculating the theoretical maximum velocity is:
   //   <Motor free speed RPM> / 60 * <Drive reduction> * <Wheel diameter meters> * pi
@@ -206,7 +206,7 @@ public static final double MAX_VELOCITY_METERS_PER_SECOND = 4000 / 60.0 *
         if (isFast) {
               return 1.0;  
         }
-        return 0.25;
+        return joystickDownscaleFactor;
   }
   
 
