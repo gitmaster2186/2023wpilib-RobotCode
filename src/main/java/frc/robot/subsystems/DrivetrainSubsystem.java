@@ -244,8 +244,8 @@ public static final double MAX_VELOCITY_METERS_PER_SECOND = 4000 / 60.0 *
 
         
       //  if((Math.abs(DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND*pid_output) < 10)) {
-                m_chassisSpeeds=new ChassisSpeeds(DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND*pid_output*-1, 0.000001,0);
-                m_chassisSpeeds=new ChassisSpeeds(DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND*pid_output*-1, -0.000001,0);
+                m_chassisSpeeds=new ChassisSpeeds(DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND*pid_output*-1/100, 0.000001,0);
+                m_chassisSpeeds=new ChassisSpeeds(DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND*pid_output*-1/100, -0.000001,0);
 
         //}
         //Prabhu bring the value in 0 to 1 range
