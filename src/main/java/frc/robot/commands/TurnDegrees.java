@@ -58,7 +58,7 @@ private double m_start_degree=0;
   @Override
   public boolean isFinished() {
     
-   return Math.abs( m_drive.getCurrentPose().getRotation().getDegrees() -m_degrees)>=0.001;
+   return Math.abs( m_drive.getCurrentPose().getRotation().getDegrees() -m_start_degree) -m_degrees>=0.001;
    //return false;
   }
 
