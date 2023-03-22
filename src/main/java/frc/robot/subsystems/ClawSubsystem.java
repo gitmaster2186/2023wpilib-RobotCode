@@ -29,6 +29,7 @@ public class ClawSubsystem extends SubsystemBase
 
     private SparkMaxLimitSwitch m_forwardLimit;
     private SparkMaxLimitSwitch m_reverseLimit;
+    
 
 
     //create the roation map
@@ -148,7 +149,8 @@ public class ClawSubsystem extends SubsystemBase
         // SmartDashboard.putNumber("current Rotation", m_clawEncoder.getPosition());
         SmartDashboard.putNumber("current claw Rotation", m_clawEncoder.getPosition());
         // SmartDashboard.putNumber("Set Point", rotationMap[currentPosition.position]);
-
+        SmartDashboard.putNumber("claw temp", m_clawMotor.getMotorTemperature());
+        SmartDashboard.putNumber("Voltage to the claw motor", m_clawMotor.getBusVoltage());
 
         // SmartDashboard.putBoolean("Forward Limit Switch", m_forwardLimit.isPressed());
         // SmartDashboard.putBoolean("Reverse Limit Switch", m_reverseLimit.isPressed());
