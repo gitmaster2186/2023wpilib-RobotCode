@@ -20,9 +20,15 @@ public class AutonomousTime extends SequentialCommandGroup {
     //drivetrainsubsystem.SwerveDriveOdomertyInitialize();
     addCommands(
         new DriveTime_x(2, 2.0, drivetrainsubsystem),
+<<<<<<< Updated upstream
          new TurnDegrees(2, 90,1, drivetrainsubsystem),
          new DriveTime_x(2, 2.0, drivetrainsubsystem),
          new TurnDegrees(2, 90, -1,drivetrainsubsystem)
+=======
+         new TurnDegrees(2, 90, drivetrainsubsystem),
+         new DriveTime_x(2, 2.0, drivetrainsubsystem),
+         new TurnDegrees(2, -90, drivetrainsubsystem)
+>>>>>>> Stashed changes
         );
   }
 }

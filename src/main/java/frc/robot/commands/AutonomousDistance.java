@@ -19,6 +19,7 @@ public class AutonomousDistance extends SequentialCommandGroup {
     //drivetrainsubsystem.SwerveDriveOdomertyInitialize();
     System.out.println("Auto Distance Started");
     addCommands(
+<<<<<<< Updated upstream
       // positive x meters is forward
       // Positive y meters is left
       // Drive distance x is not as accurate on trailer floor due to higher speed (>=2)
@@ -33,6 +34,13 @@ public class AutonomousDistance extends SequentialCommandGroup {
      // new DriveDistance_x(-2, 2, drivetrainsubsystem)
      //new DriveDistance_y(-2, 0.5, drivetrainsubsystem)
     //new TurnDegrees(3, 90,-1, drivetrainsubsystem)
+=======
+      new DriveDistance_x(-0.5, 3, drivetrainsubsystem)//,
+     // new PlatformDockPidCommand_Pitch(drivetrainsubsystem)
+     //   new TurnDegrees(1, 90, drivetrainsubsystem),
+     //   new DriveDistance(-2, 1, drivetrainsubsystem)
+     //   new TurnDegrees(1, 90, drivetrainsubsystem)
+>>>>>>> Stashed changes
         );
   }
 }

@@ -68,6 +68,7 @@ public class RobotContainer {
         0,
         new Rotation2d()
         ));
+<<<<<<< Updated upstream
     //Prabhu initialize Gyroscope to 0 on start
     m_drivetrainSubsystem.zeroGyroscope();
     //m_drivetrainSubsystem.zeroRoll();
@@ -78,6 +79,35 @@ public class RobotContainer {
           () -> -modifyAxis(m_controller.getLeftX()) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
           () -> -modifyAxis(m_controller.getRightX()) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND
     ));
+=======
+        //Prabhu initialize Gyroscope to 0 on start
+        m_drivetrainSubsystem.zeroGyroscope();
+        //m_drivetrainSubsystem.zeroRoll();
+        
+        m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(
+        m_drivetrainSubsystem,
+        () -> -modifyAxis(m_controller.getLeftY()) * 
+        DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+        () -> -modifyAxis(m_controller.getLeftX()) * 
+        DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+        () -> -modifyAxis(m_controller.getRightX()) * 
+        DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND
+        ));
+        
+        // Configure the button bindings
+        configureButtonBindings();
+    }
+    
+            /**
+            * Use this method to define your button->command mappings. Buttons can be created by
+            * instantiating a {@link GenericHID} or one of its subclasses ({@link
+            * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
+            * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
+            */
+            private void configureButtonBindings() {
+                //m_subcontroller.y().onTrue(getAutonomousCommand());
+                m_subcontroller.povDown().onTrue(Commands.runOnce(() -> m_drivetrainSubsystem.zeroGyroscope(), m_drivetrainSubsystem));
+>>>>>>> Stashed changes
 
     // Configure the button bindings
     configureButtonBindings();

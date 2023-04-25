@@ -197,6 +197,7 @@ public static final double MAX_VELOCITY_METERS_PER_SECOND = 4000 / 60.0 *
   }
 
   public Rotation2d getGyroscopeRotation() {
+<<<<<<< Updated upstream
     // FIXME Remove if you are using a Pigeon
 //      return Rotation2d.fromDegrees(m_pigeon.getFusedHeading());
 
@@ -221,6 +222,12 @@ public static final double MAX_VELOCITY_METERS_PER_SECOND = 4000 / 60.0 *
    //System.out.println("angle of gyro" + Rotation2d.fromDegrees(360.0 - m_navx.getYaw()));
    return Rotation2d.fromDegrees(360.0 - m_navx.getYaw());
    // return new Rotation2d();
+=======
+   
+        //return Rotation2d.fromDegrees(360.0 - m_navx.getYaw());
+        return Rotation2d.fromDegrees(360.0 - m_navx.getYaw());
+   
+>>>>>>> Stashed changes
   }
 
   public void drive(ChassisSpeeds chassisSpeeds) {
@@ -274,12 +281,23 @@ public static final double MAX_VELOCITY_METERS_PER_SECOND = 4000 / 60.0 *
 
     
     m_pos=m_odometry.update(getGyroscopeRotation(), getModulePositions() );
+<<<<<<< Updated upstream
     //SmartDashboard.putString("Current Pose at Drive Train" ,m_pos.toString());
 
 //     SmartDashboard.putNumber("Current Pose X at Drive Train" ,m_pos.getX());
 //     SmartDashboard.putNumber("Current Pose Y at Drive Train" ,m_pos.getY());
 //     SmartDashboard.putNumber("Current Degress at Drive Train" ,m_pos.getRotation().getDegrees());
 //     SmartDashboard.putNumber("Current Rotations at Drive Train" ,m_pos.getRotation().getRotations());
+=======
+   // SmartDashboard.putString("Current Pose at Drive Train" ,m_pos.toString());
+
+    SmartDashboard.putNumber("Current Pose X at Drive Train" ,m_pos.getX());
+    SmartDashboard.putNumber("Current Pose Y at Drive Train" ,m_pos.getY());
+    SmartDashboard.putNumber("Current Degress at Drive Train" ,m_pos.getRotation().getDegrees());
+    SmartDashboard.putNumber("Current Rotations at Drive Train" ,m_pos.getRotation().getRotations());
+    SmartDashboard.updateValues();
+    
+>>>>>>> Stashed changes
   }
 
   
@@ -297,7 +315,7 @@ public static final double MAX_VELOCITY_METERS_PER_SECOND = 4000 / 60.0 *
      m_modulePositions[2]=m_backLeftModule_position;
      m_modulePositions[3]=m_backRightModule_position;
 
-     SmartDashboard.updateValues();
+ 
      return m_modulePositions;
 
   }

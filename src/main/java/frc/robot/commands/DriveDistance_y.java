@@ -9,7 +9,15 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DrivetrainSubsystem;
 
+<<<<<<< Updated upstream
+<<<<<<<< Updated upstream:src/main/java/frc/robot/commands/DriveDistance_y.java
 public class DriveDistance_y extends CommandBase {
+========
+public class DriveDistance_x extends CommandBase {
+>>>>>>>> Stashed changes:src/main/java/frc/robot/commands/DriveDistance_x.java
+=======
+public class DriveDistance_y extends CommandBase {
+>>>>>>> Stashed changes
   private final DrivetrainSubsystem m_drive;
   private final double m_distance;
   private final double m_speed;
@@ -22,7 +30,15 @@ public class DriveDistance_y extends CommandBase {
    * @param meters The number of meters the robot will drive
    * @param drive The drivetrain subsystem on which this command will run
    */
+<<<<<<< Updated upstream
+<<<<<<<< Updated upstream:src/main/java/frc/robot/commands/DriveDistance_y.java
   public DriveDistance_y(double speed, double meters, DrivetrainSubsystem drive) {
+========
+  public DriveDistance_x(double speed, double meters, DrivetrainSubsystem drive) {
+>>>>>>>> Stashed changes:src/main/java/frc/robot/commands/DriveDistance_x.java
+=======
+  public DriveDistance_y(double speed, double meters, DrivetrainSubsystem drive) {
+>>>>>>> Stashed changes
     m_distance = meters;
     m_speed = speed;
     m_drive = drive;
@@ -35,10 +51,16 @@ public class DriveDistance_y extends CommandBase {
     
     m_drive.drive ( new ChassisSpeeds(0, 0, 0));
     // m_drive.zeroGyroscope();
+<<<<<<< Updated upstream
    //m_drive.SwerveDriveOdomertyInitialize();
    start_pos_y=m_drive.getCurrentPose().getY();
    //System.out.println("start_pos_y");
    //System.out.println(start_pos_y);
+=======
+   m_drive.SwerveDriveOdomertyInitialize();
+   start_pos_y=m_drive.getCurrentPose().getY();
+   System.out.print(start_pos_y);
+>>>>>>> Stashed changes
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -57,7 +79,11 @@ public class DriveDistance_y extends CommandBase {
   @Override
   public boolean isFinished() {
     // Compare distance travelled from start to desired distance
+<<<<<<< Updated upstream
     return Math.abs(m_drive.getCurrentPose().getY() - start_pos_y) >= m_distance;
+=======
+    return Math.abs(m_drive.getCurrentPose().getY()-start_pos_y) >= m_distance;
+>>>>>>> Stashed changes
    //return false;
   }
 }
