@@ -303,6 +303,9 @@ public static final double MAX_VELOCITY_METERS_PER_SECOND = 4000 / 60.0 *
 public void zeroRoll() {
         
 }
+public float getRoll(){
+        return m_navx.getRoll();
+}
 
 public void drive_parameters(double x_speed, double y_speed, double final_angle) {
         m_chassisSpeeds= new ChassisSpeeds(DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND*x_speed,DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND*y_speed,final_angle);

@@ -37,26 +37,26 @@ public final class Constants {
     public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 8; //Set front left module steer motor ID
     public static final int FRONT_LEFT_MODULE_STEER_ENCODER= 11; //Set front left steer encoder ID
     // public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(113.4); //Measure and set front left steer offset
-    public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(110.2); //Measure and set front left steer offset
+    public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(112.7); //Measure and set front left steer offset
     
     public static final int FRONT_RIGHT_MODULE_DRIVE_MOTOR = 4; //Set front right drive motor ID
     public static final int FRONT_RIGHT_MODULE_STEER_MOTOR = 9; //Set front right steer motor ID
     public static final int FRONT_RIGHT_MODULE_STEER_ENCODER = 12; //Set front right steer encoder ID
     //public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(68.8); //Measure and set front right steer offset
-    public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(62.7); //Measure and set front right steer offset
+    public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(61.8); //Measure and set front right steer offset
     
     public static final int BACK_LEFT_MODULE_DRIVE_MOTOR = 2; //Set back left drive motor ID
     public static final int BACK_LEFT_MODULE_STEER_MOTOR = 7; //Set back left steer motor ID
     public static final int BACK_LEFT_MODULE_STEER_ENCODER = 10; //Set back left steer encoder ID
     // public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(229.6); //Measure and set back left steer offset
-    public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(47.5); //Measure and set back left steer offset
+    public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(42); //Measure and set back left steer offset
     
     
     public static final int BACK_RIGHT_MODULE_DRIVE_MOTOR = 5; //Set back right drive motor ID
     public static final int BACK_RIGHT_MODULE_STEER_MOTOR = 3; //Set back right steer motor ID
     public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 13; //Set back right steer encoder ID
     // public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(207.4); //Measure and set back right steer offset
-    public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(205.8); //Measure and set back right steer offset
+    public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(204.2-180); //Measure and set back right steer offset
     
     public static final int ARM_MOTOR_ID = 15; //sahil- random unused value, maybe should be different?
     public static final int CLAW_MOTOR_ID = 16; //sahil- random unused value, maybe should be different?

@@ -25,7 +25,7 @@ public class PlatformDockPidCommand_Pitch extends PIDCommand {
         // The contpitcher that the command will use
         new PIDController(Constants.kP,Constants.kI, Constants.kD),//P,I,D
         // This should return the measurement
-        () -> smoothpitch(m_navx.getRoll()),
+        () -> smoothpitch(m_drivetrainSubsystem.getRoll()),
         // This should return the setpoint (can also be a constant)
         () -> 0,
         // This uses the output

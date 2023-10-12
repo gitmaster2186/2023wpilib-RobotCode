@@ -32,7 +32,9 @@ public class DriveDistance extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    
+    System.out.println(m_speed);
+    System.out.println(m_distance);
+    System.out.println("In Drive Distance Init");
     m_drive.drive ( new ChassisSpeeds(0, 0, 0));
     // m_drive.zeroGyroscope();
    m_drive.SwerveDriveOdomertyInitialize();
@@ -43,7 +45,9 @@ public class DriveDistance extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_drive.drive(new ChassisSpeeds(m_speed,0,0));
+    m_drive.drive(new ChassisSpeeds(m_speed,0.00000001,0));
+    m_drive.drive(new ChassisSpeeds(m_speed,-0.00000001,0));
+
   }
 
   // Called once the command ends or is interrupted.
@@ -56,6 +60,7 @@ public class DriveDistance extends CommandBase {
   @Override
   public boolean isFinished() {
     // Compare distance travelled from start to desired distance
+    System.out.println(m_drive.getCurrentPose().getX());
     return Math.abs(m_drive.getCurrentPose().getX()-start_pos_x) >= m_distance;
    //return false;
   }
